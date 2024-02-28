@@ -32,9 +32,13 @@ class ISWCollector:
     @staticmethod
     def generate_url_2022():
         base_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment"
-        date_range = ISWCollector.date_range(dt.date., dt.date)
+        date_range = ISWCollector.date_range(dt.date, dt.date)
+        url_list = []
+        for date in date_range:
+            formatted_date = date.strftime('%B-%d-%Y').lower()
+            url_list.append(base_url + "-" + formatted_date)
+        return url_list
 
-        for date in
 
 
 # https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-february-26-2024
