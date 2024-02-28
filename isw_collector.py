@@ -33,7 +33,7 @@ class ISWCollector:
     def generate_url_2022():
         base_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment"
         start_date = dt.date(2022, 2, 24)
-        end_date = dt.date(2022, 12, 31)
+        end_date = dt.date(2023, 1, 1)
         date_range = ISWCollector.date_range(start_date, end_date)
         url_list = []
 
