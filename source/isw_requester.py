@@ -105,7 +105,8 @@ class ISWRequester:
 
 
 if __name__ == "__main__":
-    url = "https://understandingwar.org/backgrounder/russian-offensive-campaign-assessment-december-12"
+    # url = "https://understandingwar.org/backgrounder/russian-offensive-campaign-assessment-december-12"
+    url = "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-5"
     isw = ISWRequester(url)
     # isw.raw_out()
     print (isw.title)
