@@ -49,9 +49,6 @@ class ISWCollector:
             yield dt.date.fromordinal(ordinal)
 
 
-# https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-february-26-2024
-
-
 if __name__ == "__main__":
     isw_collector = ISWCollector()
     isw_collector.add_url(isw_collector.generate_url_roca())
