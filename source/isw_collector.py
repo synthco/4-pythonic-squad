@@ -30,7 +30,7 @@ class ISWCollector:
         url_list = []
         for date in date_range_generator:
             if date.year == 2022:
-                url_list.append(base_url + "-" + date.strftime("%B-%d"))
+                url_list.append(base_url + "-" + date.strftime("%B-%#d"))
             else:
                 url_list.append(base_url + "-" + ISWCollector.reformat_date(date))
 
@@ -40,7 +40,7 @@ class ISWCollector:
 
     @staticmethod
     def reformat_date(input_date):
-        formatted_date = input_date.strftime('%B-%d-%Y').lower()
+        formatted_date = input_date.strftime('%B-%#d-%Y').lower()
         return formatted_date
 
     @staticmethod
