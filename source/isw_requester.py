@@ -63,13 +63,16 @@ class ISWRequester:
     def beautify(self):
         self.remove_links()
         #Remove all unnecessary information
-        pass
+        for data in self.raw_data:
+            if data.startswith("Note") or data.startswith("Click here"):
+                self.raw_data.remove(data)
 
 
     def remove_links(self):
         #Remove all links at the bottom of the reqest
-
-        pass
+        links = [link.get('href') for link in self.soup.find_all('a') if link.get('href') is not None]
+        self.raw_data = [data for data in self.raw_data if not any(link in data for link in links)]
+        
     def get_date(self):
         date_string = self.title.split(", ", 1)[1]
         print(date_string)
@@ -107,9 +110,10 @@ class ISWRequester:
 if __name__ == "__main__":
     url = "https://understandingwar.org/backgrounder/russian-offensive-campaign-assessment-december-12"
     isw = ISWRequester(url)
-    # isw.raw_out()
-    print (isw.title)
-    print(isw.date)
+    isw.beautify()
+    isw.raw_out()
+    # print (isw.title)
+    # print(isw.date)
     # print(isw.soup)
 
 
