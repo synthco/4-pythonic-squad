@@ -58,8 +58,7 @@ def get_alarm_by_url(location):
     response = requests.get(url)
     if response.status_code == requests.codes.ok:
         return json.loads(response.text)
-    else:
-        raise InvalidUsage(response.text, status_code=response.status_code)
+    raise InvalidUsage(response.text, status_code=response.status_code)
 
 
 def get_alarm(location):
