@@ -63,9 +63,13 @@ class ISWRequester:
     def beautify(self):
         self.remove_links()
         #Remove all unnecessary information
-        for data in self.raw_data:
-            if data.startswith("Note") or data.startswith("Click here"):
-                self.raw_data.remove(data)
+        self.raw_data = [data for data in self.raw_data
+                         if not data.startswith("Note") and not data.startswith("Click") and data != '']
+
+        # pattern = re.compile(r"\[\d\]")
+        # for row in self.raw_data:
+        #     new_row = re.sub(pattern, '', row)
+        #     row = new_row
 
 
     def remove_links(self):
