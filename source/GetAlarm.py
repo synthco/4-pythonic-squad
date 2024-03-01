@@ -68,8 +68,7 @@ def get_alarm(location):
     alarm = get_alarm_by_url(location)
     if alarm == "A":
         return True
-    else:
-        return False
+    return False
 
 
 loc = "м. Київ"
