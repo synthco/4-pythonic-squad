@@ -63,7 +63,7 @@ def get_alarm_by_url(location):
 
 
 def get_alarm(location):
-    if location not in uid_dict.values():
+    if location not in uid_dict:
         return InvalidUsage(message=f"Invalid location - {location}").print()
     alarm = get_alarm_by_url(location)
     if alarm == "A":
