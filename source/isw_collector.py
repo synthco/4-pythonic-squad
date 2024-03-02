@@ -27,7 +27,13 @@ class ISWCollector:
     def generate_url_roca():
         base_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment"
         date_range_generator = ISWCollector.date_range(dt.date(2022, 3, 1), dt.date(2023, 1, 26))
-        url_list = []
+        date_range_generator = ISWCollector.date_range(dt.date(2022, 3, 1), dt.date(2023, 1, 26))
+        #added url from February 24 to February 28
+        url_list = ["https://www.understandingwar.org/backgrounder/ukraine-conflict-update-7",
+                    "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-8",
+                    "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-9",
+                    "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-10",
+                    "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-11"]
         for date in date_range_generator:
             if date.year == 2022:
                 #changed day-format (without 0 before number)
