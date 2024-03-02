@@ -115,9 +115,5 @@ if __name__ == "__main__":
     isw = ISWRequester(url)
     isw.beautify()
     isw.raw_out()
-    # print (isw.title)
-    # print(isw.date)
-    # print(isw.soup)
-
 
 
