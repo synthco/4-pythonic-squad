@@ -30,10 +30,12 @@ class ISWCollector:
         url_list = []
         for date in date_range_generator:
             if date.year == 2022:
+                #changed day-format (without 0 before number)
                 url_list.append(base_url + "-" + date.strftime("%B-%#d"))
             else:
                 url_list.append(base_url + "-" + ISWCollector.reformat_date(date))
-
+                
+        #list of not working urls
         problem_url = ["https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-May-5",
                        "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-July-11",
                        "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-August-12",
@@ -41,6 +43,7 @@ class ISWCollector:
                        "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-December-25",
                        "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-january-1-2023"]
 
+        #remove urls that caused promlems
         for url in url_list:
             if url in problem_url:
                 url_list.remove(url)
