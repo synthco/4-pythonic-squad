@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime as dt
+import re
 
 class ISWRequester:
     def __init__(self, url: str):
@@ -66,10 +67,8 @@ class ISWRequester:
         self.raw_data = [data for data in self.raw_data
                          if not data.startswith("Note") and not data.startswith("Click") and data != '']
 
-        # pattern = re.compile(r"\[\d\]")
-        # for row in self.raw_data:
-        #     new_row = re.sub(pattern, '', row)
-        #     row = new_row
+        for i, row in enumerate(self.raw_data):
+            self.raw_data[i] = re.sub(r'\[\d+\]', '', row)
 
 
     def remove_links(self):
