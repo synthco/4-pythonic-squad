@@ -1,18 +1,21 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime as dt
+import re
 
 class ISWRequester:
     def __init__(self, url: str):
         self.url = url
-        self.soup = self.get_soup()                       #main_html
-        self.title = self.get_title()                           #titile
-        self.date = self.get_date()                         #date
-        self.html_data = self._html_raw_parse()  #main_html_v2
+        self.soup = self.get_soup()  # main_html
+        self.title = self.get_title()  # title
+        self.date = self.get_date()  # date
+        self.html_data = self._html_raw_parse()  # main_html_v2
         self._raw_data = self._parse_raw()
-        self._data_collection = None  # main_text -> to dict
+        self._data_collection = self.to_dict()  # main_text -> to dict
 
 
+    def get_html_data(self):
+        return self.html_data
 
     @property
     def data_collection(self):
@@ -37,81 +40,74 @@ class ISWRequester:
 
     def _parse_raw(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
+        res = []
         if field_items_divs:
-            paragraphs = field_items_divs[2].find_all("p")
-            res = []
+            paragraphs = field_items_divs[2].find_all("p") + field_items_divs[2].find_all("ul")
             for paragraph in paragraphs:
                 res.append(paragraph.text.strip())
-
-        else:
-            raise Exception("No Paragraphs found")
-        return res
+            return res
+        raise Exception("No Paragraphs found")
 
     def _html_raw_parse(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
+        res = []
         if field_items_divs:
             paragraphs = field_items_divs[2].find_all("p")
-            res = []
             for paragraph in paragraphs:
                 res.append(paragraph)
-        pass
+            return res
+        raise Exception("No Paragraphs found")
 
     def raw_out(self):
-        for i in range(self.raw_data.__len__()):
-            print(self.raw_data[i])
+        for i in self.raw_data:
+            print(i)
 
     def beautify(self):
         self.remove_links()
-        #Remove all unnecessary information
-        pass
+        # Remove all unnecessary information
+        self.raw_data = [data for data in self.raw_data
+                         if not data.startswith("Note") and not data.startswith("Click") and data != '']
 
+        for i, row in enumerate(self.raw_data):
+            self.raw_data[i] = re.sub(r'\[\d+\]', '', row)
 
     def remove_links(self):
-        #Remove all links at the bottom of the reqest
+        # Remove all links at the bottom of the reqest
+        links = [link.get('href') for link in self.soup.find_all('a') if link.get('href') is not None]
+        self.raw_data = [data for data in self.raw_data if not any(link in data for link in links)]
 
-        pass
     def get_date(self):
         date_string = self.title.split(", ", 1)[1]
-        print(date_string)
+        #print(date_string)
         if "2023" in date_string:
             return dt.datetime.strptime(date_string, "%B %d, %Y").date()
-        else:
-            date = date_string + ", 2022"
-            return dt.datetime.strptime(date, "%B %d, %Y").date()
-
-
-
+        date = date_string + ", 2022"
+        return dt.datetime.strptime(date, "%B %d, %Y").date()
 
     def get_title(self):
-        #Get title from HTML
+        # Get title from HTML
         title = self.soup.find("h1")
-
         return title.text.strip()
 
-
     def to_dict(self):
-        #Convert pure data to dict
-        #ask Andrew WTF is main_html and main_html_v2?
-        # date
-        # short_url
-        # title
-        # text_title
-        # full_url
-        # main_html
-        # main_html_v2
-        # main_text
-        pass
+        dict = {}
 
+        dict["date"] = self.date
+        dict["title"] = self.title
+        dict["full_url"] = self.url
+        dict["main_html"] = self.soup
+        dict["main_html_v2"] = self.html_data
+        dict["main_text"] = self._raw_data
+
+        return dict
 
 
 if __name__ == "__main__":
-    # url = "https://understandingwar.org/backgrounder/russian-offensive-campaign-assessment-december-12"
-    url = "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-5"
+    url = "https://understandingwar.org/backgrounder/russian-offensive-campaign-assessment-december-13"
     isw = ISWRequester(url)
-    # isw.raw_out()
-    print (isw.title)
-    print(isw.date)
-    # print(isw.soup)
-
-
-
+    isw.beautify()
+    #isw.raw_out()
+    new_dict = isw.to_dict()
+    a = new_dict['main_text']
+    for i in a:
+        print(i)
