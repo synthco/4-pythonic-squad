@@ -81,6 +81,8 @@ class ISWRequester:
         print(date_string)
         if "2023" in date_string:
             return dt.datetime.strptime(date_string, "%B %d, %Y").date()
+        elif "2022" in date_string:
+            return dt.datetime.strptime(date_string, "%B %d, %Y").date()
         else:
             date = date_string + ", 2022"
             return dt.datetime.strptime(date, "%B %d, %Y").date()
