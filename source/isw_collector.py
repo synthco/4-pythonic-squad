@@ -28,12 +28,11 @@ class ISWCollector:
         base_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment"
         date_range_generator = ISWCollector.date_range(dt.date(2022, 3, 1), dt.date(2023, 1, 26))
         date_range_generator = ISWCollector.date_range(dt.date(2022, 3, 1), dt.date(2023, 1, 26))
-        #added url from February 24 to February 28
-        url_list = ["https://www.understandingwar.org/backgrounder/ukraine-conflict-update-7",
-                    "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-8",
-                    "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-9",
-                    "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-10",
-                    "https://www.understandingwar.org/backgrounder/ukraine-conflict-update-11"]
+        #added url from February 25 to February 28
+        url_list = ["https://www.understandingwar.org/backgrounder/russia-ukraine-warning-update-russian-offensive-campaign-assessment-february-25-2022",
+                    "https://www.understandingwar.org/backgrounder/russia-ukraine-warning-update-russian-offensive-campaign-assessment-february-26",
+                    "https://www.understandingwar.org/backgrounder/russia-ukraine-warning-update-russian-offensive-campaign-assessment-february-27",
+                    "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-february-28-2022"]
         for date in date_range_generator:
             if date.year == 2022:
                 #changed day-format (without 0 before number)
