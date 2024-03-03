@@ -13,29 +13,29 @@ def json_to_csv(key, location, date1, date2, output_file="test1.csv"):
 
     #collecting all attributes from json as keys from dict
     if 'days' in data:
-        with open(output_file, "w", newline="", encoding='utf-8') as csvfile:
-            writer = csv.writer(csvfile)
+        with open(output_file, "w", encoding='utf-8') as csvfile:
+            writer_csv = csv.writer(csvfile)
             #most info is located in "days" and we also have hourly data for each day
             # but don't forget about general info!(others)
-            others = {key: data[key] for key in
-                      ['latitude', 'longitude', 'resolvedAddress', 'address', 'timezone', 'tzoffset']}
+            others = {key: data[key] for key in ['latitude', 'longitude', 'resolvedAddress', 'address', 'timezone', 'tzoffset']}
             daily_data = data['days']
-            hourly_keys = set()
+            hour_keys = set()
 
             for day_data in daily_data:
                 hourly_data = day_data.get('hours', [])
                 for hour_data in hourly_data:
-                    hourly_keys.update(hour_data.keys())
+                    hour_keys.update(hour_data.keys())
 
-            all_keys = list(others.keys()) + list(daily_data[0].keys()) + list(hourly_keys)
-            writer.writerow(all_keys)
+            keys = list(others.keys()) + list(daily_data[0].keys()) + list(hour_keys)
+            #col names
+            writer_csv.writerow(keys)
             #getting values for all keys via iteration through all dict and writing it to the csv file
             for day in daily_data:
                 day_values = [day.get(key, "") for key in daily_data[0].keys()]
                 for hour in day["hours"]:
-                    hourly_values = [hour.get(key, "") for key in hourly_keys]
-                    row = [others.get(key, "") for key in others.keys()] + day_values + hourly_values
-                    writer.writerow(row)
+                    hour_values = [hour.get(key, "") for key in hour_keys]
+                    row = [others.get(key, "") for key in others.keys()] + day_values + hour_values
+                    writer_csv.writerow(row)
 
         print(f"Data has been written to {output_file}")
     #returning the name of csv file
@@ -92,10 +92,9 @@ def main():
     date1 = current_date.strftime("%Y-%m-%d")
     date2 = next_day.strftime("%Y-%m-%d")
     time = current_date.strftime("%H-00-00")
-
-    #creating the list of all counties, adding api-key
-    # API - https://www.visualcrossing.com
-    #your API-key here:
+#creating the list of all counties, adding api-key
+# API - https://www.visualcrossing.com
+#your API-key here:
     key = ""
     locations = ["Kyiv", "Rivne", "Lutsk", "Lviv", "Zhytomyr",
                  "Chernivtsi", "Ivano-Frankivsk", "Ternopil", "Khmelnytskyi",
