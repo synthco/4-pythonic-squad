@@ -3,27 +3,6 @@ import pandas as pd
 import csv
 from datetime import datetime, timedelta
 
-#initializing current date and next date
-# initializing current time as well
-current_date = datetime.now()
-one_day_delta = timedelta(days=1)
-next_day = current_date + one_day_delta
-date1 = current_date.strftime("%Y-%m-%d")
-date2 = next_day.strftime("%Y-%m-%d")
-time = current_date.strftime("%H-00-00")
-
-#creating the list of all counties, adding api-key
-# API - https://www.visualcrossing.com
-#your API-key here:
-key = ""
-locations = ["Kyiv", "Rivne", "Lutsk", "Lviv", "Zhytomyr",
-             "Chernivtsi", "Ivano-Frankivsk", "Ternopil", "Khmelnytskyi",
-             "Uzhhorod", "Vinnytsia", "Cherkasy", "Poltava", "Chernihiv",
-             "Sumy", "Kharkiv", "Kropyvnytskyi", "Dnipro", "Mykolaiv",
-             "Kharkiv", "Luhansk", "Donetsk", "Odesa", "Chernihiv",
-             "Kherson"]
-
-
 #function to make csv from json response
 def json_to_csv(key, location, date1, date2, output_file="test1.csv"):
     url = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{location},Ukraine/{date1}/{date2}?key={key}"
@@ -64,7 +43,8 @@ def json_to_csv(key, location, date1, date2, output_file="test1.csv"):
 
 #function for finding time point in dataset which is equal to current time
 def find_datetime(time):
-    current = int(time.split("-")[0])  # Splitting the time string and accessing the hour part
+    #splitting the time input and finding the int value of current hour and return it
+    current = int(time.split("-")[0])
     for hour in range(24):
         if hour == current:
             return hour
@@ -74,20 +54,20 @@ def to_celsius(x):
     return (x - 32) * (5 / 9)
 
 #creating a clear df from api-resppnse (easiest way to work with data)
-def clear_df(location, key, date1, date2):
+def clear_df(time, location, key, date1, date2):
     data = json_to_csv(key, location, date1, date2)
     df = pd.read_csv(data)
     #dropping an extra column which was duplicated in "keys" in previous function
     #because of the specific of json
     df.drop(["hours"], axis=1, inplace=True)
     #converting values of temp
-    columns_to_convert = ['tempmax', 'temp', 'tempmin', 'feelslike', 'feelslikemax', 'feelslikemin']
-    df[columns_to_convert] = (df[columns_to_convert] - 32) * (5 / 9)
+    columns_convert = ['tempmax', 'temp', 'tempmin', 'feelslike', 'feelslikemax', 'feelslikemin']
+    df[columns_convert] = (df[columns_convert] - 32) * (5 / 9)
     #changing names for hourly columns
     for col in df.columns:
         if ".1" in col:
-            new_col_name = col.replace(".1", "_hourly")
-            df.rename(columns={col: new_col_name}, inplace=True)
+            new = col.replace(".1", "_hourly")
+            df.rename(columns={col: new}, inplace=True)
 
     df=df.fillna(0)
     #using function to cut 12-hour-period in dataframe we're interested in
@@ -96,28 +76,42 @@ def clear_df(location, key, date1, date2):
 
     #dropping several columns
     columns_to_add = ["sunsetEpoch_hourly", "moonphase_hourly", "sunrise_hourly", "sunset_hourly", "sunriseEpoch_hourly"]
-
+    #reset nan-values, otherwise program won't see the column's values(even as nan) and then delete them
     for col in columns_to_add:
         df[col] = 0
     df = df.drop(columns_to_add, axis=1)
     #yay! finally
     return df
 
-#converts to csv. it's not neccesarily to put it in function tho
-def df_csv(df, f_name='weather_data.csv'):
-    return df.to_csv(f_name, index=False)  # Corrected variable name to 'df'
-
 def main():
+    # initializing current date and next date
+    # initializing current time as well
+    current_date = datetime.now()
+    one_day_delta = timedelta(days=1)
+    next_day = current_date + one_day_delta
+    date1 = current_date.strftime("%Y-%m-%d")
+    date2 = next_day.strftime("%Y-%m-%d")
+    time = current_date.strftime("%H-00-00")
+
+    #creating the list of all counties, adding api-key
+    # API - https://www.visualcrossing.com
+    #your API-key here:
+    key = ""
+    locations = ["Kyiv", "Rivne", "Lutsk", "Lviv", "Zhytomyr",
+                 "Chernivtsi", "Ivano-Frankivsk", "Ternopil", "Khmelnytskyi",
+                 "Uzhhorod", "Vinnytsia", "Cherkasy", "Poltava", "Chernihiv",
+                 "Sumy", "Kharkiv", "Kropyvnytskyi", "Dnipro", "Mykolaiv",
+                 "Kharkiv", "Luhansk", "Donetsk", "Odesa", "Chernihiv",
+                 "Kherson"]
     weather = pd.DataFrame()
 
     for loc in locations:
-        new_data = clear_df(loc, key, date1, date2)
+        new_data = clear_df(time, loc, key, date1, date2)
         weather = pd.concat([weather, new_data], ignore_index=True)
 
-    df_csv(weather, "test1.csv")
+    weather.to_csv("weather_test.csv", index=False)
 
 
 main()
-
-#check test file here:
-# pd.read_csv("test1.csv")
+# check the csv file here:
+#pd.read_csv("weather_test.csv")
