@@ -66,14 +66,11 @@ class ISWCollector:
 if __name__ == "__main__":
     isw_collector = ISWCollector()
     isw_collector.add_url(isw_collector.generate_url_roca())
-    #print(isw_collector.urls)
 
     instances = []
 
     for i in range(len(isw_collector.urls[0])):
         url = isw_collector.urls[0][i]
-        # response = requests.get(url)
-        # if response.status_code != 404:
         instances.append(ISWRequester(url))
 
     with open("ISW.csv", "w", newline="", encoding='utf-8') as csvfile:
@@ -88,3 +85,13 @@ if __name__ == "__main__":
             instance.beautify()
             data_dict = instance.to_dict()
             writer.writerow(data_dict)
+
+    df = pd.read_csv("ISW.csv")
+
+    print(df)
+
+    df.dropna(subset=["date"], inplace=True)
+
+    print(df)
+
+    df.to_csv("ISW.csv", index=False)
