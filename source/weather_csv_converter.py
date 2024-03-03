@@ -14,7 +14,7 @@ time = current_date.strftime("%H-00-00")
 
 #creating the list of all counties, adding api-key
 # API - https://www.visualcrossing.com
-#your API here:
+#your API-key here:
 key = ""
 locations = ["Kyiv", "Rivne", "Lutsk", "Lviv", "Zhytomyr",
              "Chernivtsi", "Ivano-Frankivsk", "Ternopil", "Khmelnytskyi",
@@ -119,5 +119,5 @@ def main():
 
 main()
 
-#test
+#check test file here:
 # pd.read_csv("test1.csv")
