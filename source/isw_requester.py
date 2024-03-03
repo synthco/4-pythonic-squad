@@ -41,22 +41,24 @@ class ISWRequester:
     def _parse_raw(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
         res = []
-        if field_items_divs:
+        if field_items_divs and len(field_items_divs) > 1:
             paragraphs = field_items_divs[2].find_all("p") + field_items_divs[2].find_all("ul")
             for paragraph in paragraphs:
                 res.append(paragraph.text.strip())
             return res
-        raise Exception("No Paragraphs found")
+        else:
+            return None
 
     def _html_raw_parse(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
-        res = []
-        if field_items_divs:
+        if field_items_divs and len(field_items_divs) > 1:
             paragraphs = field_items_divs[2].find_all("p")
+            res = []
             for paragraph in paragraphs:
                 res.append(paragraph)
             return res
-        raise Exception("No Paragraphs found")
+        else:
+            return None
 
     def raw_out(self):
         for i in self.raw_data:
@@ -77,12 +79,13 @@ class ISWRequester:
         self.raw_data = [data for data in self.raw_data if not any(link in data for link in links)]
 
     def get_date(self):
-        date_string = self.title.split(", ", 1)[1]
-        #print(date_string)
-        if "2023" in date_string:
-            return dt.datetime.strptime(date_string, "%B %d, %Y").date()
-        date = date_string + ", 2022"
-        return dt.datetime.strptime(date, "%B %d, %Y").date()
+        if ", " in self.title:
+            date_string = self.title.split(", ", 1)[1]
+            if "2023" in date_string:
+                return dt.datetime.strptime(date_string, "%B %d, %Y").date()
+            date = date_string + ", 2022"
+            return dt.datetime.strptime(date, "%B %d, %Y").date()
+        return None
 
     def get_title(self):
         # Get title from HTML
@@ -108,6 +111,7 @@ if __name__ == "__main__":
     isw.beautify()
     #isw.raw_out()
     new_dict = isw.to_dict()
-    a = new_dict['main_text']
-    for i in a:
-        print(i)
+    #a = new_dict['main_text']
+    # for i in a:
+    #     print(i)
+    #print(new_dict.keys())
