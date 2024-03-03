@@ -46,8 +46,7 @@ class ISWRequester:
             for paragraph in paragraphs:
                 res.append(paragraph.text.strip())
             return res
-        else:
-            return None
+        return None
 
     def _html_raw_parse(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
@@ -57,8 +56,7 @@ class ISWRequester:
             for paragraph in paragraphs:
                 res.append(paragraph)
             return res
-        else:
-            return None
+        return None
 
     def raw_out(self):
         for i in self.raw_data:
