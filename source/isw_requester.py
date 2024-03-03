@@ -79,13 +79,15 @@ class ISWRequester:
         self.raw_data = [data for data in self.raw_data if not any(link in data for link in links)]
 
     def get_date(self):
-        if ", " in self.title:
-            date_string = self.title.split(", ", 1)[1]
-            if "2023" in date_string:
-                return dt.datetime.strptime(date_string, "%B %d, %Y").date()
+        date_string = self.title.split(", ", 1)[1]
+        print(date_string)
+        if "2023" in date_string:
+            return dt.datetime.strptime(date_string, "%B %d, %Y").date()
+        elif "2022" in date_string:
+            return dt.datetime.strptime(date_string, "%B %d, %Y").date()
+        else:
             date = date_string + ", 2022"
             return dt.datetime.strptime(date, "%B %d, %Y").date()
-        return None
 
     def get_title(self):
         # Get title from HTML
