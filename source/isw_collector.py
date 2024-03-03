@@ -5,8 +5,6 @@ import datetime as dt
 class ISWCollector:
     def __init__(self):
         self.urls = []
-        self.data = pd.DataFrame(
-            columns=["url", "title", "date", "html_text", "text"])
 
     @staticmethod
     def collect(url):
