@@ -1,10 +1,10 @@
 from isw_requester import ISWRequester
-# import csv
+import csv
 import pandas as pd
 import datetime as dt
 class ISWCollector:
     def __init__(self):
-        self.urls  = []
+        self.urls = []
         self.data = pd.DataFrame(
             columns=["url", "title", "date", "html_text", "text"])
 
@@ -26,21 +26,18 @@ class ISWCollector:
     @staticmethod
     def generate_url_roca():
         base_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment"
-        date_range_generator = ISWCollector.date_range(dt.date(2022, 2, 24), dt.date(2023, 2, 23))
+        date_range_generator = ISWCollector.date_range(dt.date(2022, 2, 24), dt.date(2023, 1, 25))
         url_list = []
         for date in date_range_generator:
             if date.year == 2022:
-                url_list.append(base_url + "-" + date.strftime("%B-%#d"))
+                url_list.append(base_url + "-" + date.strftime("%B-%d"))
             else:
                 url_list.append(base_url + "-" + ISWCollector.reformat_date(date))
-
-            # for url in url_list:
-            #     print(url)
         return url_list
 
     @staticmethod
     def reformat_date(input_date):
-        formatted_date = input_date.strftime('%B-%#d-%Y').lower()
+        formatted_date = input_date.strftime('%B-%d-%Y').lower()
         return formatted_date
 
     @staticmethod
@@ -52,4 +49,25 @@ class ISWCollector:
 if __name__ == "__main__":
     isw_collector = ISWCollector()
     isw_collector.add_url(isw_collector.generate_url_roca())
-    print(isw_collector.urls)
+    #print(isw_collector.urls)
+
+    instances = []
+
+    for i in range(len(isw_collector.urls[0])):
+        url = isw_collector.urls[0][i]
+        # response = requests.get(url)
+        # if response.status_code != 404:
+        instances.append(ISWRequester(url))
+
+    with open("ISW.csv", "w", newline="", encoding='utf-8') as csvfile:
+        a = instances[0]
+        data_dict = a.to_dict()
+        fieldnames = list(data_dict.keys())
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+
+        for instance in instances:
+            instance.beautify()
+            data_dict = instance.to_dict()
+            writer.writerow(data_dict)
