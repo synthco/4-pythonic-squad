@@ -56,6 +56,13 @@ class ISWCollector:
         return url_list
 
     @staticmethod
+    def generate_url_yesterday():
+        base_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment"
+        yesterday = dt.date.today() - dt.timedelta(days=1)
+        url = base_url + "-" + yesterday.strftime('%B-%#d-%Y').lower()
+        return [url]
+
+    @staticmethod
     def reformat_date(input_date):
         formatted_date = input_date.strftime('%B-%#d-%Y').lower()
         return formatted_date
