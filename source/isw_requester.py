@@ -65,13 +65,15 @@ class ISWRequester:
             print(i)
 
     def beautify(self):
-        self.remove_links()
-        # Remove all unnecessary information
-        self.raw_data = [data for data in self.raw_data
-                         if not data.startswith("Note") and not data.startswith("Click") and data != '']
+        if self.raw_data is not None:
+            self.remove_links()
+            # Remove all unnecessary information
+            self.raw_data = [data for data in self.raw_data
+                             if not data.startswith("Note") and not data.startswith("Click") and data != '']
 
-        for i, row in enumerate(self.raw_data):
-            self.raw_data[i] = re.sub(r'\[\d+\]', '', row)
+            for i, row in enumerate(self.raw_data):
+                self.raw_data[i] = re.sub(r'\[\d+\]', '', row)
+
 
     def remove_links(self):
         # Remove all links at the bottom of the reqest
@@ -109,8 +111,8 @@ if __name__ == "__main__":
     url = "https://understandingwar.org/backgrounder/russian-offensive-campaign-assessment-december-13"
     isw = ISWRequester(url)
     isw.beautify()
-    #isw.raw_out()
-    new_dict = isw.to_dict()
+    isw.raw_out()
+    #new_dict = isw.to_dict()
     #a = new_dict['main_text']
     # for i in a:
     #     print(i)
