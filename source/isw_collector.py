@@ -51,6 +51,13 @@ class ISWCollector:
         return url_list
 
     @staticmethod
+    def generate_url_yesterday():
+        base_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment"
+        yesterday = dt.date.today() - dt.timedelta(days=1)
+        url = base_url + "-" + yesterday.strftime('%B-%#d-%Y').lower()
+        return [url]
+
+    @staticmethod
     def reformat_date(input_date):
         formatted_date = input_date.strftime('%B-%d-%Y').lower()
         return formatted_date
@@ -88,8 +95,30 @@ if __name__ == "__main__":
 
     print(df)
 
+
     df.dropna(subset=["date"], inplace=True)
 
     print(df)
 
     df.to_csv("ISW.csv", index=False)
+
+    isw_yesterday = ISWCollector()
+    isw_yesterday.add_url(isw_yesterday.generate_url_yesterday())
+    a = isw_yesterday.urls[0]
+    print(a)
+    isw_req = ISWRequester(a[0])
+
+    isw_req.beautify()
+    b = isw_req.to_dict()
+    data_dict = isw_req.to_dict()
+    df_yesterday = pd.DataFrame(columns=data_dict.keys())
+    df_yesterday = pd.concat([df, pd.DataFrame([b])], ignore_index=True)
+    print(df_yesterday)
+
+
+    df.dropna(subset=["date"], inplace=True)
+
+    print(df)
+
+    df.to_csv("ISW.csv", index=False)
+

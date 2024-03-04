@@ -79,11 +79,13 @@ class ISWRequester:
         self.raw_data = [data for data in self.raw_data if not any(link in data for link in links)]
 
     def get_date(self):
+
         date_string = self.title.split(", ", 1)[1]
-        print(date_string)
         if "2023" in date_string:
             return dt.datetime.strptime(date_string, "%B %d, %Y").date()
         elif "2022" in date_string:
+            return dt.datetime.strptime(date_string, "%B %d, %Y").date()
+        elif "2024" in date_string:
             return dt.datetime.strptime(date_string, "%B %d, %Y").date()
         else:
             date = date_string + ", 2022"
@@ -112,8 +114,4 @@ if __name__ == "__main__":
     isw = ISWRequester(url)
     isw.beautify()
     isw.raw_out()
-    #new_dict = isw.to_dict()
-    #a = new_dict['main_text']
-    # for i in a:
-    #     print(i)
-    #print(new_dict.keys())
+
