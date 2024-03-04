@@ -95,6 +95,7 @@ if __name__ == "__main__":
 
     print(df)
 
+
     df.dropna(subset=["date"], inplace=True)
 
     print(df)
@@ -113,3 +114,11 @@ if __name__ == "__main__":
     df_yesterday = pd.DataFrame(columns=data_dict.keys())
     df_yesterday = pd.concat([df, pd.DataFrame([b])], ignore_index=True)
     print(df_yesterday)
+
+
+    df.dropna(subset=["date"], inplace=True)
+
+    print(df)
+
+    df.to_csv("ISW.csv", index=False)
+
