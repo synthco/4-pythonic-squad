@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import datetime as dt
 import re
-from lxml import etree
+from lxml import html
 
 
 
@@ -119,9 +119,12 @@ class ISWRequester:
             return dt.datetime.strptime(date, "%B %d, %Y").date()
 
     def get_date_a(self):
-        root = etree.fromstring(str(self.soup))
-        print(root)
 
+        tree = html.fromstring(self.soup.get_text())
+        # element = tree.xpath('''//*[@id="block-system-main"]/div/span[3]/span''')
+        element = tree.xpath("""//*[@id="block-system-main"]/div/div/div[2]/div/div/ul[1]/li[1]/strong""")
+        print(element)
+        #THIS SHIT IS FUCKING NOT WORKING
 
     def get_title(self):
         # Get title from HTML
