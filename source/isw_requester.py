@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 import datetime as dt
 import re
 
+import pandas as pd
+
+
 class ISWRequester:
     def __init__(self, url: str):
         self.url = url
@@ -12,7 +15,6 @@ class ISWRequester:
         self.html_data = self._html_raw_parse()  # main_html_v2
         self._raw_data = self._parse_raw()
         self._data_collection = self.to_dict()  # main_text -> to dict
-
 
     def get_html_data(self):
         return self.html_data
@@ -40,22 +42,46 @@ class ISWRequester:
 
     def _parse_raw(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
-        res = []
+        if len (field_items_divs) == 0:
+            field_items_divs = self.soup.find_all("div")
+
+        res = [] # BUG
+
         if field_items_divs and len(field_items_divs) > 1:
             paragraphs = field_items_divs[2].find_all("p") + field_items_divs[2].find_all("ul")
             for paragraph in paragraphs:
                 res.append(paragraph.text.strip())
+
+            if len(res) != 0:
+                return res
+
+            paragraphs = field_items_divs[1].find_all("span") + field_items_divs[1].find_all("ul")
+            for paragraph in paragraphs:
+                res.append(paragraph.text.strip())
             return res
+
         return None
 
     def _html_raw_parse(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
+        if len(field_items_divs) == 0:
+            field_items_divs = self.soup.find_all("div")
+
+        res = []
+
         if field_items_divs and len(field_items_divs) > 1:
-            paragraphs = field_items_divs[2].find_all("p")
-            res = []
+            paragraphs = field_items_divs[2].find_all("p") + field_items_divs[2].find_all("ul")
+            for paragraph in paragraphs:
+                res.append(paragraph)
+
+            if len(res) != 0:
+                return res
+
+            paragraphs = field_items_divs[1].find_all("span") + field_items_divs[1].find_all("ul")
             for paragraph in paragraphs:
                 res.append(paragraph)
             return res
+
         return None
 
     def raw_out(self):
@@ -72,12 +98,12 @@ class ISWRequester:
             for i, row in enumerate(self.raw_data):
                 self.raw_data[i] = re.sub(r'\[\d+\]', '', row)
 
-
     def remove_links(self):
         # Remove all links at the bottom of the reqest
         links = [link.get('href') for link in self.soup.find_all('a') if link.get('href') is not None]
         self.raw_data = [data for data in self.raw_data if not any(link in data for link in links)]
 
+    # REWRITE
     def get_date(self):
 
         date_string = self.title.split(", ", 1)[1]
@@ -91,6 +117,10 @@ class ISWRequester:
             date = date_string + ", 2022"
             return dt.datetime.strptime(date, "%B %d, %Y").date()
 
+    def get_date_2(self):
+    #//*[@id="block-system-main"]/div/span[3]/span
+    pass
+
     def get_title(self):
         # Get title from HTML
         title = self.soup.find("h1")
@@ -98,7 +128,6 @@ class ISWRequester:
 
     def to_dict(self):
         dict = {}
-
         dict["date"] = self.date
         dict["title"] = self.title
         dict["full_url"] = self.url
@@ -110,8 +139,10 @@ class ISWRequester:
 
 
 if __name__ == "__main__":
-    url = "https://understandingwar.org/backgrounder/russian-offensive-campaign-assessment-december-13"
+    url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-March-18"
     isw = ISWRequester(url)
-    isw.beautify()
-    isw.raw_out()
+    # print(isw.soup)
+    df = pd.Series(isw.data_collection)
+
+    print(df['main_text'])
 
