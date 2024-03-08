@@ -2,8 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import datetime as dt
 import re
+from lxml import etree
 
-import pandas as pd
+
 
 
 class ISWRequester:
@@ -45,7 +46,7 @@ class ISWRequester:
         if len (field_items_divs) == 0:
             field_items_divs = self.soup.find_all("div")
 
-        res = [] # BUG
+        res = []
 
         if field_items_divs and len(field_items_divs) > 1:
             paragraphs = field_items_divs[2].find_all("p") + field_items_divs[2].find_all("ul")
@@ -117,9 +118,10 @@ class ISWRequester:
             date = date_string + ", 2022"
             return dt.datetime.strptime(date, "%B %d, %Y").date()
 
-    def get_date_2(self):
-    #//*[@id="block-system-main"]/div/span[3]/span
-    pass
+    def get_date_a(self):
+        root = etree.fromstring(str(self.soup))
+        print(root)
+
 
     def get_title(self):
         # Get title from HTML
@@ -138,11 +140,8 @@ class ISWRequester:
         return dict
 
 
-if __name__ == "__main__":
-    url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-March-18"
-    isw = ISWRequester(url)
-    # print(isw.soup)
-    df = pd.Series(isw.data_collection)
 
-    print(df['main_text'])
-
+l = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-March-18"
+r = ISWRequester(l)
+# print(str(r.soup))
+r.get_date_a()
