@@ -104,27 +104,15 @@ class ISWRequester:
         links = [link.get('href') for link in self.soup.find_all('a') if link.get('href') is not None]
         self.raw_data = [data for data in self.raw_data if not any(link in data for link in links)]
 
-    # REWRITE
     def get_date(self):
 
-        date_string = self.title.split(", ", 1)[1]
-        if "2023" in date_string:
-            return dt.datetime.strptime(date_string, "%B %d, %Y").date()
-        elif "2022" in date_string:
-            return dt.datetime.strptime(date_string, "%B %d, %Y").date()
-        elif "2024" in date_string:
-            return dt.datetime.strptime(date_string, "%B %d, %Y").date()
-        else:
-            date = date_string + ", 2022"
-            return dt.datetime.strptime(date, "%B %d, %Y").date()
+        tree = html.fromstring(str(self.soup))
+        element = tree.xpath("""//*[@id="block-system-main"]/div/span[3]/span""")[0].text
+        element = element.rstrip("- ").strip()
+        date = dt.datetime.strptime(element, "%b %d, %Y").date()
+        print(date)
+        return date
 
-    def get_date_a(self):
-
-        tree = html.fromstring(self.soup.get_text())
-        # element = tree.xpath('''//*[@id="block-system-main"]/div/span[3]/span''')
-        element = tree.xpath("""//*[@id="block-system-main"]/div/div/div[2]/div/div/ul[1]/li[1]/strong""")
-        print(element)
-        #THIS SHIT IS FUCKING NOT WORKING
 
     def get_title(self):
         # Get title from HTML
@@ -144,7 +132,7 @@ class ISWRequester:
 
 
 
-l = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-March-18"
+l = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-March-16"
 r = ISWRequester(l)
 # print(str(r.soup))
 r.get_date_a()
