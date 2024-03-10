@@ -33,7 +33,7 @@ class ISWCollector:
 
         for date in date_range_generator:
             if date.year == 2022:
-                url_list.append(base_url + "-" + date.strftime("%B-%#d"))
+                url_list.append(base_url + "-" + date.strftime("%B-%d")) #changes
             else:
                 url_list.append(base_url + "-" + ISWCollector.reformat_date(date))
 
@@ -72,11 +72,13 @@ if __name__ == "__main__":
     isw_collector = ISWCollector()
     isw_collector.add_url(isw_collector.generate_url_roca())
 
+
     instances = []
 
     for i in range(len(isw_collector.urls[0])):
         url = isw_collector.urls[0][i]
         instances.append(ISWRequester(url))
+        print(i)
 
     with open("ISW.csv", "w", newline="", encoding='utf-8') as csvfile:
         a = instances[0]
