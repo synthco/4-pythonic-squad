@@ -33,9 +33,11 @@ class ISWCollector:
 
         for date in date_range_generator:
             if date.year == 2022:
-                url_list.append(base_url + "-" + date.strftime("%B-%d")) #changes
+                res_url = base_url + "-" +  date.strftime("%B") + "-" + str(date.day)
+                url_list.append(res_url) #changes
             else:
-                url_list.append(base_url + "-" + ISWCollector.reformat_date(date))
+                res_url = base_url + "-" + date.strftime("%B") + "-" + str(date.day) + "-" + str(date.year)
+                url_list.append(res_url)
 
         problem_url = ["https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-May-5",
                        "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-July-11",
@@ -77,8 +79,9 @@ if __name__ == "__main__":
 
     for i in range(len(isw_collector.urls[0])):
         url = isw_collector.urls[0][i]
-        instances.append(ISWRequester(url))
-        print(i)
+        r = ISWRequester(url)
+        instances.append(r)
+        print(f"url - {url}, status code - {r.title}")
 
     with open("ISW.csv", "w", newline="", encoding='utf-8') as csvfile:
         a = instances[0]
