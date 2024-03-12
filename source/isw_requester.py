@@ -4,6 +4,7 @@ import datetime as dt
 import re
 from lxml import html
 
+
 class ISWRequester:
     def __init__(self, url: str):
         self.url = url
@@ -13,7 +14,6 @@ class ISWRequester:
         self.html_data = self._html_raw_parse()  # main_html_v2
         self._raw_data = self._parse_raw()
         self._data_collection = self.to_dict()  # main_text -> to dict
-
 
     def get_html_data(self):
         return self.html_data
@@ -41,11 +41,16 @@ class ISWRequester:
 
     def _parse_raw(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
+
         res = []
         if field_items_divs and len(field_items_divs) > 1:
             paragraphs = field_items_divs[2].find_all("p") + field_items_divs[2].find_all("ul")
             for paragraph in paragraphs:
                 res.append(paragraph.text.strip())
+            if len(res) == 0:
+                paragraphs = field_items_divs[1].find_all("p")
+                for paragraph in paragraphs:
+                    res.append(paragraph.text.strip())
             return res
         return None
 
@@ -56,6 +61,11 @@ class ISWRequester:
             res = []
             for paragraph in paragraphs:
                 res.append(paragraph)
+
+            if len(res) == 0:
+                paragraphs = field_items_divs[1].find_all("p")
+                for paragraph in paragraphs:
+                    res.append(paragraph)
             return res
         return None
 
@@ -73,9 +83,8 @@ class ISWRequester:
             for i, row in enumerate(self.raw_data):
                 self.raw_data[i] = re.sub(r'\[\d+\]', '', row)
 
-
     def remove_links(self):
-        # Remove all links at the bottom of the reqest
+        # Remove all links at the bottom of the request
         links = [link.get('href') for link in self.soup.find_all('a') if link.get('href') is not None]
         self.raw_data = [data for data in self.raw_data if not any(link in data for link in links)]
 
@@ -98,20 +107,7 @@ class ISWRequester:
         return title.text.strip()
 
     def to_dict(self):
-        dict = {}
+        res = {"date": self.date, "title": self.title, "full_url": self.url, "main_html": self.soup,
+               "main_html_v2": self.html_data, "main_text": self._raw_data}
 
-        dict["date"] = self.date
-        dict["title"] = self.title
-        dict["full_url"] = self.url
-        dict["main_html"] = self.soup
-        dict["main_html_v2"] = self.html_data
-        dict["main_text"] = self._raw_data
-
-        return dict
-
-
-if __name__ == "__main__":
-    url = "https://understandingwar.org/backgrounder/russian-offensive-campaign-assessment-december-13"
-    isw = ISWRequester(url)
-    isw.beautify()
-    isw.raw_out()
+        return res
