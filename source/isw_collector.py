@@ -2,6 +2,8 @@ from isw_requester import ISWRequester
 import csv
 import pandas as pd
 import datetime as dt
+
+
 class ISWCollector:
     def __init__(self):
         self.urls = []
@@ -33,8 +35,8 @@ class ISWCollector:
 
         for date in date_range_generator:
             if date.year == 2022:
-                res_url = base_url + "-" +  date.strftime("%B") + "-" + str(date.day)
-                url_list.append(res_url) #changes
+                res_url = base_url + "-" + date.strftime("%B") + "-" + str(date.day)
+                url_list.append(res_url)
             else:
                 res_url = base_url + "-" + date.strftime("%B") + "-" + str(date.day) + "-" + str(date.year)
                 url_list.append(res_url)
@@ -74,7 +76,6 @@ if __name__ == "__main__":
     isw_collector = ISWCollector()
     isw_collector.add_url(isw_collector.generate_url_roca())
 
-
     instances = []
 
     for i in range(len(isw_collector.urls[0])):
@@ -98,19 +99,18 @@ if __name__ == "__main__":
 
     df = pd.read_csv("ISW.csv")
 
-    print(df)
-
+    # print(df)
 
     df.dropna(subset=["date"], inplace=True)
 
-    print(df)
+    # print(df)
 
     df.to_csv("ISW.csv", index=False)
 
     isw_yesterday = ISWCollector()
     isw_yesterday.add_url(isw_yesterday.generate_url_yesterday())
     a = isw_yesterday.urls[0]
-    print(a)
+    # print(a)
     isw_req = ISWRequester(a[0])
 
     isw_req.beautify()
@@ -118,12 +118,11 @@ if __name__ == "__main__":
     data_dict = isw_req.to_dict()
     df_yesterday = pd.DataFrame(columns=data_dict.keys())
     df_yesterday = pd.concat([df, pd.DataFrame([b])], ignore_index=True)
-    print(df_yesterday)
-
+    # print(df_yesterday)
 
     df.dropna(subset=["date"], inplace=True)
 
-    print(df)
+    # print(df)
 
     df.to_csv("ISW.csv", index=False)
 
