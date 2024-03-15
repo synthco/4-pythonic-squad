@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import datetime as dt
 import re
-from lxml import html
+
 
 
 class ISWRequester:
@@ -75,13 +75,20 @@ class ISWRequester:
 
     def beautify(self):
         if self.raw_data is not None:
+            self.raw_data.pop(0)
+            self.raw_data.pop(0)
             self.remove_links()
             # Remove all unnecessary information
             self.raw_data = [data for data in self.raw_data
                              if not data.startswith("Note") and not data.startswith("Click") and data != '']
 
-            for i, row in enumerate(self.raw_data):
-                self.raw_data[i] = re.sub(r'\[\d+\]', '', row)
+            for i in range(len(self.raw_data)):
+                #delete [1], [2], [3]...
+                self.raw_data[i] = re.sub(r'\[\d+\]', '', self.raw_data[i])
+                #delete \xa0
+                self.raw_data[i] = re.sub(r'\xa0', '', self.raw_data[i])
+
+
 
     def remove_links(self):
         # Remove all links at the bottom of the request
