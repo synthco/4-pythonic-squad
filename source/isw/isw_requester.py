@@ -87,6 +87,7 @@ class ISWRequester:
                 self.raw_data[i] = re.sub(r'\[\d+\]', '', self.raw_data[i])
                 #delete \xa0
                 self.raw_data[i] = re.sub(r'\xa0', '', self.raw_data[i])
+                self.raw_data[i] = re.sub(r'\n', '', self.raw_data[i])
 
 
 
