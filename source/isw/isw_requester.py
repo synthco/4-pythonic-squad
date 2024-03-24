@@ -42,8 +42,8 @@ class ISWRequester:
     def _parse_raw(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
 
-        res = []
         if field_items_divs and len(field_items_divs) > 1:
+            res = []
             paragraphs = field_items_divs[2].find_all("p") + field_items_divs[2].find_all("ul")
             for paragraph in paragraphs:
                 res.append(paragraph.text.strip())
