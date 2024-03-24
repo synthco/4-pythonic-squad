@@ -39,12 +39,11 @@ class ISWRequester:
         soup = BeautifulSoup(r.content, "html.parser")
         return soup
 
-    def _parse_raw(self):
+        def _parse_raw(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
-
         if field_items_divs and len(field_items_divs) > 1:
-            res = []
             paragraphs = field_items_divs[2].find_all("p") + field_items_divs[2].find_all("ul")
+            res = []
             for paragraph in paragraphs:
                 res.append(paragraph.text.strip())
             if len(res) == 0:
@@ -54,6 +53,7 @@ class ISWRequester:
             return res
         return None
 
+
     def _html_raw_parse(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
         if field_items_divs and len(field_items_divs) > 1:
@@ -61,7 +61,6 @@ class ISWRequester:
             res = []
             for paragraph in paragraphs:
                 res.append(paragraph)
-
             if len(res) == 0:
                 paragraphs = field_items_divs[1].find_all("p")
                 for paragraph in paragraphs:
