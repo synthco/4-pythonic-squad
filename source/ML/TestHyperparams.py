@@ -49,7 +49,6 @@ print(tscv)
 accuracies = []
 
 i = 1
-# Train LogisticRegression
 for train_index, test_index in tscv.split(X):
     print(i)
     i += 1
