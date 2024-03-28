@@ -25,7 +25,7 @@ conf_matrices1 = []
 model1 = LinearRegression(positive=True, fit_intercept=False)
 i = 1
 
-# Train LinearRegression
+# Linear Regression
 for train_index, test_index in tscv.split(X):
     print(i)
     i += 1
@@ -66,7 +66,7 @@ conf_matrices2 = []
 model2 = LogisticRegression(max_iter=50000, class_weight='balanced', solver='newton-cg', C=np.logspace(-4, 4, 2)[1], penalty='l2', tol=0.000001)
 
 i = 1
-# Train LogisticRegression
+#Logistic Regression
 for train_index, test_index in tscv.split(X):
     print(i)
     i += 1
