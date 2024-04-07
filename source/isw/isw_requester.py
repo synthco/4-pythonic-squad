@@ -1,10 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime as dt
+import pandas as pd
 import re
 import spacy
-import pandas as pd
-
+import ast
+from nltk.corpus import stopwords
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 class ISWRequester:
@@ -16,6 +18,9 @@ class ISWRequester:
         self.html_data = self._html_raw_parse()  # main_html_v2
         self._raw_data = self._parse_raw()
         self._data_collection = self.to_dict()  # main_text -> to dict
+        self.dict = None
+        self.df = None
+        self.vect = None
 
     def get_html_data(self):
         return self.html_data
@@ -115,8 +120,85 @@ class ISWRequester:
         title = self.soup.find("h1")
         return title.text.strip()
 
+    #convertation to dict
     def to_dict(self):
         res = {"date": self.date, "title": self.title, "full_url": self.url, "main_html": self.soup,
                "main_html_v2": self.html_data, "main_text": self._raw_data}
+        self.dict = res
+        return
 
-        return res
+    # lemmatizing
+    def lemmatize_text(self, word_list):
+        nlp = spacy.load("en_core_web_sm")
+        text = ' '.join(word_list)
+        doc = nlp(text)
+        lemmatized_words = [token.lemma_ for token in doc]
+
+        return lemmatized_words
+
+    #lowercasing
+    def lowercase_text(self, text):
+        sample = ast.literal_eval(text)
+        return [i.lower() for i in sample]
+
+    #text cleaning from odd elements
+    def clean_text(self, text_list):
+        cleaned_text = ' '.join(text_list)
+
+        cleaned_text = re.sub(
+            r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\b',
+            lambda match: match.group(0).lower(), cleaned_text, flags=re.IGNORECASE)
+
+        # remove symbols like '-', '/', '\', '\xa0' etc
+        cleaned_text = re.sub(r'[-/\\—\xa0"’“]', ' ', cleaned_text)
+        cleaned_text = re.sub(r'[’“]', ' ', cleaned_text)
+        cleaned_text = re.sub(r'(march)', ' ', cleaned_text)
+        cleaned_text = re.sub(r'\n', ' ', cleaned_text)
+
+        cleaned_text = re.sub(r'\b(?:pm|am)\b', '', cleaned_text)
+
+        cleaned_text = re.sub(r'\b(?:\d+(?:st|nd|rd|th)?)\b', '', cleaned_text)
+
+        cleaned_text = re.sub(r'\b\d+[a-zA-Z]+|(?<!\d)[a-zA-Z]+\d+\b', '', cleaned_text)
+        cleaned_text = re.sub(r'\b\w\b', '', cleaned_text)
+        cleaned_text = re.sub(r'\s+', ' ', cleaned_text.strip())
+
+        return cleaned_text
+
+    #stopword removal
+    def remove_stopwords(self, text):
+        ", ".join(stopwords.words('english'))
+        STOPWORDS = set(stopwords.words('english'))
+
+        return " ".join([word for word in str(text).split() if word not in STOPWORDS])
+
+
+    #convertation to DataFrame
+    def to_df(self):
+        data = self.df
+        df = pd.DataFrame({"date": [data["date"]], "main_text": [data["main_text"]]})
+        self.df = df
+        return
+
+    #method for vectorization
+    def to_vect(self):
+        pure = self.df
+        #use lowercasing
+        pure["main_text"] = pure["main_text"].apply(self.lowercase_text)
+        #clean text
+        pure['new'] = pure['main_text'].apply(lambda x: self.clean_text(x))
+        pure["main_text"] = pure["new"]
+        pure.drop(["new"], axis=1)
+        #remove stopwords
+        pure["text_wo_stop"] = pure["main_text"].apply(lambda text: self.remove_stopwords(text))
+        #lemmatizing
+        pure['text_for_vect2'] = pure['text_for_vect'].apply(self.lemmatize_text)
+        #dropping out all useless columns
+        pure.drop(["text_wo_stop", "main_text"], axis=1)
+        #vectorizing
+        tfidf_vect = TfidfVectorizer(max_features=700)
+        tfidf_matrix = tfidf_vect.fit_transform(pure['text_for_vect2'])
+        tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=tfidf_vect.get_feature_names_out())
+        vect_df = pd.concat([pure["date"], tfidf_df], axis=1)
+        self.vect = vect_df
+        return
