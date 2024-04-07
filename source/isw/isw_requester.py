@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import datetime as dt
 import re
+import spacy
+import pandas as pd
 
 
 
