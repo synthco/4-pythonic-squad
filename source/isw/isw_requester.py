@@ -4,7 +4,6 @@ import datetime as dt
 import re
 
 
-
 class ISWRequester:
     def __init__(self, url: str):
         self.url = url
