@@ -19,4 +19,4 @@ if __name__ == "__main__":
 
     df.dropna(subset=["date"], inplace=True)
 
-    df.to_csv("ISW20.csv", index=False)
+    df.to_csv("ISW.csv", index=False)
