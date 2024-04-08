@@ -12,8 +12,7 @@ class ISWRequester:
         self.title = self.get_title()  # title
         self.date = self.get_date()  # date
         self.html_data = self._html_raw_parse()  # main_html_v2
-        self._raw_data = self._parse_raw()
-        self._data_collection = self.to_dict()  # main_text -> to dict
+        self._raw_data = self._parse_raw()  # main_text
 
     def get_html_data(self):
         return self.html_data
