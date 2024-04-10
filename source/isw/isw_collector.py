@@ -71,6 +71,3 @@ class ISWCollector:
         for ordinal in range(start_date.toordinal(), end_date.toordinal()):
             yield dt.date.fromordinal(ordinal)
 
-
-
-

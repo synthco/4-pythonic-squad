@@ -39,7 +39,7 @@ def json_to_csv(key, location, date1, date2, output_file="test1.csv"):
 
         print(f"Data has been written to {output_file}")
     #returning the name of csv file
-    return output_file
+    return output_filex
 
 #function for finding time point in dataset which is equal to current time
 def find_datetime(time):

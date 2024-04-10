@@ -1,6 +1,8 @@
 from weather_collector import WeatherCollector
 from datetime import datetime
 
-date = datetime.now()
-weather_collector = WeatherCollector(date=date)
-
+current_date = datetime.now()
+collector = WeatherCollector(current_date)
+weather_data = collector.data
+print(weather_data)
+print(collector.weather_data)
