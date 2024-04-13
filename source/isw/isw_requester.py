@@ -131,16 +131,17 @@ class ISWRequester:
 
     # method for vectorization
     def to_vect(self):
+        # TODO add if module is not downoladed -> download
+        nlp = spacy.load("en_core_web_sm")
+
 
         # lemmatizing
-        def lemmatize_text(word_list):
-            # TODO add if module is not downoladed -> download
-            nlp = spacy.load("en_core_web_sm")
-            text = ' '.join(word_list)
+        def lemmatize_text(text):
             doc = nlp(text)
-            lemmatized_words = [token.lemma_ for token in doc]
+            lemmatized_text = ' '.join([token.lemma_ for token in doc])
+            return lemmatized_text
 
-            return lemmatized_words
+
 
         # lowercasing
         def lowercase_text(text):
@@ -149,26 +150,29 @@ class ISWRequester:
             return [i.lower() for i in text]
 
         # text cleaning from odd elements
+        import re
+
         def clean_text(text_list):
+            # Ensure input is a list of strings
+            if not all(isinstance(text, str) for text in text_list):
+                raise ValueError("Input must be a list of strings")
+
             cleaned_text = ' '.join(text_list)
 
+            # Perform text cleaning operations
             cleaned_text = re.sub(
                 r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\b',
                 lambda match: match.group(0).lower(), cleaned_text, flags=re.IGNORECASE)
 
-            # remove symbols like '-', '/', '\', '\xa0' etc
             cleaned_text = re.sub(r'[-/\\—\xa0"’“]', ' ', cleaned_text)
             cleaned_text = re.sub(r'[’“]', ' ', cleaned_text)
             cleaned_text = re.sub(r'(march)', ' ', cleaned_text)
             cleaned_text = re.sub(r'\n', ' ', cleaned_text)
-
             cleaned_text = re.sub(r'\b(?:pm|am)\b', '', cleaned_text)
-
             cleaned_text = re.sub(r'\b(?:\d+(?:st|nd|rd|th)?)\b', '', cleaned_text)
-
             cleaned_text = re.sub(r'\b\d+[a-zA-Z]+|(?<!\d)[a-zA-Z]+\d+\b', '', cleaned_text)
             cleaned_text = re.sub(r'\b\w\b', '', cleaned_text)
-            cleaned_text = re.sub(r'\s+', ' ', cleaned_text.strip)
+            cleaned_text = re.sub(r'\s+', ' ', cleaned_text.strip())
 
             return cleaned_text
 
@@ -192,7 +196,7 @@ class ISWRequester:
         pure["text_wo_stop"] = pure["main_text"].apply(lambda text: remove_stopwords(text))
 
         # lemmatizing
-        pure['text_for_vect2'] = pure['text_for_vect'].apply(lemmatize_text)
+        pure['text_for_vect2'] = pure['text_wo_stop'].apply(lemmatize_text)
 
         # dropping out all useless columns
         pure.drop(["text_wo_stop", "main_text"], axis=1)
