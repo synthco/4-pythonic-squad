@@ -47,11 +47,6 @@ class WeatherCollector:
         return api_key.strip()
 
 
-
-    def fetch_weather_data(self, location):
-        url = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{location},Ukraine/{date1}/{date2}?key={key}"
-        response = requests.get(url)
-        data = response.json()
     def fetch_weather_data(self):
         try:
             next_day = self.date + timedelta(days=1)
@@ -81,19 +76,24 @@ class WeatherCollector:
                         hour_keys.update(hour_data.keys())
 
                 weather_df = pd.DataFrame(columns=list(data.keys()) + list(daily_data[0].keys()) + list(hour_keys))
+
+                rows = []
                 for day in daily_data:
                     day_values = [day.get(key, "") for key in daily_data[0].keys()]
                     for hour in day["hours"]:
                         hour_values = [hour.get(key, "") for key in hour_keys]
                         row = {**data, **dict(zip(daily_data[0].keys(), day_values)), **hour}
-                        print(weather_df)
-                        print('-'*12)
-                        weather_df = pd.concat([weather_df, pd.DataFrame([row])])
+                        rows.append(row)
 
-                weather_df.reset_index(drop=True, inplace=True)  # Resetting index
+                weather_df = pd.DataFrame(rows)
                 return weather_df
             else:
                 return None
+        except Exception as e:
+            print(f"An error occurred while processing data for {location}: {e}")
+            return None
+
+
         except Exception as e:
             print(f"An error occurred while processing data for {location}: {e}")
             return None

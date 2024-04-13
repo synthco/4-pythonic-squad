@@ -1,8 +1,5 @@
 from isw_requester import ISWRequester
 import datetime as dt
-import csv
-import pandas as pd
-
 
 class ISWCollector:
     def __init__(self):

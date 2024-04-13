@@ -10,17 +10,23 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 class ISWRequester:
-    def __init__(self, url: str):
-        self.url = url
+
+    def __init__(self, url=None):
+        if url is None:
+             self.url = self.gen_url_yesterday()
+        else:
+            self.url = url
+
         self.soup = self.get_soup()  # main_html
         self.title = self.get_title()  # title
         self.date = self.get_date()  # date
         self.html_data = self._html_raw_parse()  # main_html_v2
         self._raw_data = self._parse_raw()
         self._data_collection = self.to_dict()  # main_text -> to dict
-        self.dict = None
-        self.df = None
-        self.vect = None
+        self.dict = self.to_dict()
+        self.df = pd.DataFrame.from_dict(self._data_collection)
+        self.to_df()
+        self.to_vect()
 
     def get_html_data(self):
         return self.html_data
@@ -41,12 +47,20 @@ class ISWRequester:
     def data_collection(self, data):
         self._data_collection = data
 
-    def get_soup(self):
+    @staticmethod
+    def gen_url_yesterday() -> str:
+        base_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment"
+        yesterday = dt.date.today() - dt.timedelta(days=1)
+        url = base_url + "-" + yesterday.strftime('%B-%d-%Y').lower()
+        print(url)
+        return url
+
+    def get_soup(self) -> BeautifulSoup:
         r = requests.get(self.url)
         soup = BeautifulSoup(r.content, "html.parser")
         return soup
 
-        def _parse_raw(self):
+    def _parse_raw(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
         if field_items_divs and len(field_items_divs) > 1:
             paragraphs = field_items_divs[2].find_all("p") + field_items_divs[2].find_all("ul")
@@ -59,7 +73,6 @@ class ISWRequester:
                     res.append(paragraph.text.strip())
             return res
         return None
-
 
     def _html_raw_parse(self):
         field_items_divs = self.soup.find_all("div", class_="field-items")
@@ -89,13 +102,11 @@ class ISWRequester:
                              if not data.startswith("Note") and not data.startswith("Click") and data != '']
 
             for i in range(len(self.raw_data)):
-                #delete [1], [2], [3]...
+                # delete [1], [2], [3]...
                 self.raw_data[i] = re.sub(r'\[\d+\]', '', self.raw_data[i])
-                #delete \xa0
+                # delete \xa0
                 self.raw_data[i] = re.sub(r'\xa0', '', self.raw_data[i])
                 self.raw_data[i] = re.sub(r'\n', '', self.raw_data[i])
-
-
 
     def remove_links(self):
         # Remove all links at the bottom of the request
@@ -120,12 +131,11 @@ class ISWRequester:
         title = self.soup.find("h1")
         return title.text.strip()
 
-    #convertation to dict
-    def to_dict(self):
+    # convertation to dict
+    def to_dict(self) -> dict:
         res = {"date": self.date, "title": self.title, "full_url": self.url, "main_html": self.soup,
                "main_html_v2": self.html_data, "main_text": self._raw_data}
         self.dict = res
-        return
 
     # lemmatizing
     def lemmatize_text(self, word_list):
@@ -136,13 +146,15 @@ class ISWRequester:
 
         return lemmatized_words
 
-    #lowercasing
-    def lowercase_text(self, text):
+    # lowercasing
+    @staticmethod
+    def lowercase_text(text):
         sample = ast.literal_eval(text)
         return [i.lower() for i in sample]
 
-    #text cleaning from odd elements
-    def clean_text(self, text_list):
+    # text cleaning from odd elements
+    @staticmethod
+    def clean_text(text_list):
         cleaned_text = ' '.join(text_list)
 
         cleaned_text = re.sub(
@@ -165,37 +177,37 @@ class ISWRequester:
 
         return cleaned_text
 
-    #stopword removal
-    def remove_stopwords(self, text):
+    # stopword removal
+    @staticmethod
+    def remove_stopwords(text):
         ", ".join(stopwords.words('english'))
         STOPWORDS = set(stopwords.words('english'))
 
         return " ".join([word for word in str(text).split() if word not in STOPWORDS])
 
-
-    #convertation to DataFrame
+    # convertation to DataFrame
     def to_df(self):
         data = self.df
         df = pd.DataFrame({"date": [data["date"]], "main_text": [data["main_text"]]})
         self.df = df
         return
 
-    #method for vectorization
+    # method for vectorization
     def to_vect(self):
         pure = self.df
-        #use lowercasing
+        # use lowercasing
         pure["main_text"] = pure["main_text"].apply(self.lowercase_text)
-        #clean text
+        # clean text
         pure['new'] = pure['main_text'].apply(lambda x: self.clean_text(x))
         pure["main_text"] = pure["new"]
         pure.drop(["new"], axis=1)
-        #remove stopwords
+        # remove stopwords
         pure["text_wo_stop"] = pure["main_text"].apply(lambda text: self.remove_stopwords(text))
-        #lemmatizing
+        # lemmatizing
         pure['text_for_vect2'] = pure['text_for_vect'].apply(self.lemmatize_text)
-        #dropping out all useless columns
+        # dropping out all useless columns
         pure.drop(["text_wo_stop", "main_text"], axis=1)
-        #vectorizing
+        # vectorizing
         tfidf_vect = TfidfVectorizer(max_features=700)
         tfidf_matrix = tfidf_vect.fit_transform(pure['text_for_vect2'])
         tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=tfidf_vect.get_feature_names_out())
