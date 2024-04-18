@@ -4,6 +4,7 @@ import datetime as dt
 import pandas as pd
 import re
 import spacy
+import pickle
 import ast
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -28,11 +29,15 @@ class ISWRequester:
         # self.pure_text = self.pure()
 
         self.df = self.to_df()
-        self.vector = self.to_vect()
+        self._vector = self.to_vect()
 
     @property
     def data_collection(self):
         return self._data_collection
+
+    @property
+    def data_vect(self):
+        return self._vector
 
     @staticmethod
     def gen_url_yesterday() -> str:
@@ -132,15 +137,16 @@ class ISWRequester:
     # method for vectorization
     def to_vect(self):
 
-        # lemmatizing
-        def lemmatize_text(word_list):
-            # TODO add if module is not downoladed -> download
-            nlp = spacy.load("en_core_web_sm")
-            text = ' '.join(word_list)
-            doc = nlp(text)
-            lemmatized_words = [token.lemma_ for token in doc]
+        nlp = spacy.load("en_core_web_sm")
 
-            return lemmatized_words
+
+        # lemmatizing
+        def lemmatize_text(text):
+            doc = nlp(text)
+            lemmatized_text = ' '.join([token.lemma_ for token in doc])
+            return lemmatized_text
+
+
 
         # lowercasing
         def lowercase_text(text):
@@ -149,26 +155,29 @@ class ISWRequester:
             return [i.lower() for i in text]
 
         # text cleaning from odd elements
+        import re
+
         def clean_text(text_list):
+            # Ensure input is a list of strings
+            if not all(isinstance(text, str) for text in text_list):
+                raise ValueError("Input must be a list of strings")
+
             cleaned_text = ' '.join(text_list)
 
+            # Perform text cleaning operations
             cleaned_text = re.sub(
                 r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\b',
                 lambda match: match.group(0).lower(), cleaned_text, flags=re.IGNORECASE)
 
-            # remove symbols like '-', '/', '\', '\xa0' etc
             cleaned_text = re.sub(r'[-/\\—\xa0"’“]', ' ', cleaned_text)
             cleaned_text = re.sub(r'[’“]', ' ', cleaned_text)
             cleaned_text = re.sub(r'(march)', ' ', cleaned_text)
             cleaned_text = re.sub(r'\n', ' ', cleaned_text)
-
             cleaned_text = re.sub(r'\b(?:pm|am)\b', '', cleaned_text)
-
             cleaned_text = re.sub(r'\b(?:\d+(?:st|nd|rd|th)?)\b', '', cleaned_text)
-
             cleaned_text = re.sub(r'\b\d+[a-zA-Z]+|(?<!\d)[a-zA-Z]+\d+\b', '', cleaned_text)
             cleaned_text = re.sub(r'\b\w\b', '', cleaned_text)
-            cleaned_text = re.sub(r'\s+', ' ', cleaned_text.strip)
+            cleaned_text = re.sub(r'\s+', ' ', cleaned_text.strip())
 
             return cleaned_text
 
@@ -192,14 +201,17 @@ class ISWRequester:
         pure["text_wo_stop"] = pure["main_text"].apply(lambda text: remove_stopwords(text))
 
         # lemmatizing
-        pure['text_for_vect2'] = pure['text_for_vect'].apply(lemmatize_text)
+        pure['text_for_vect2'] = pure['text_wo_stop'].apply(lemmatize_text)
 
         # dropping out all useless columns
         pure.drop(["text_wo_stop", "main_text"], axis=1)
 
         # vectorizing
-        tfidf_vect = TfidfVectorizer(max_features=700)
-        tfidf_matrix = tfidf_vect.fit_transform(pure['text_for_vect2'])
+        #ENTER THE RIGHT PATH
+        with open("/Users/tsaebst/PycharmProjects/4-pythonic-squad/source/NLP/tfidf.pkl", "rb") as f:
+            tfidf_vect = pickle.load(f)
+        tfidf_matrix = tfidf_vect.transform(pure['text_for_vect2'])
         tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=tfidf_vect.get_feature_names_out())
         vect_df = pd.concat([pure["date"], tfidf_df], axis=1)
+
         return vect_df
