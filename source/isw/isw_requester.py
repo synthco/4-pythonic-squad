@@ -136,7 +136,7 @@ class ISWRequester:
 
     # method for vectorization
     def to_vect(self):
-
+        # TODO add if module is not downoladed -> download
         nlp = spacy.load("en_core_web_sm")
 
 
@@ -215,3 +215,7 @@ class ISWRequester:
         vect_df = pd.concat([pure["date"], tfidf_df], axis=1)
 
         return vect_df
+
+
+requster = ISWRequester()
+print(requster._vector)

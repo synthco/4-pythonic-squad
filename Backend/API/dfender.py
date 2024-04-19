@@ -20,7 +20,7 @@ class Dfender:
                 print("Date in format YYYY-MM-DD or in Datetime object")
 
         self.__isw = self.request_isw()
-        # self.__isw_vector = self.isw_vectorize()
+        self.__isw_vector = self.isw_vectorize()
 
         # self.__weather = self.request_weather()
 
