@@ -39,7 +39,7 @@ def json_to_csv(key, location, date1, date2, output_file="test1.csv"):
 
         print(f"Data has been written to {output_file}")
     #returning the name of csv file
-    return output_filex
+    return output_file
 
 #function for finding time point in dataset which is equal to current time
 def find_datetime(time):
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     time = current_date.strftime("%H-00-00")
 #creating the list of all counties, adding api-key
 # API - https://www.visualcrossing.com
-#your API-key here:
+#your APIі тлд  ітлд-key here:
     key = "RCWWMPLADXCCSTWC9Q6KCL9PG"
     locations = ["Kyiv", "Rivne", "Lutsk", "Lviv", "Zhytomyr",
                  "Chernivtsi", "Ivano-Frankivsk", "Ternopil", "Khmelnytskyi",
