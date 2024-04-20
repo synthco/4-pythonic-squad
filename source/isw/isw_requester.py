@@ -4,6 +4,8 @@ import datetime as dt
 import pandas as pd
 import re
 import spacy
+import subprocess
+import sys
 import pickle
 import ast
 from nltk.corpus import stopwords
@@ -12,7 +14,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 class ISWRequester:
 
-    def __init__(self, url=None):
+    def __init__(self, url=None, date=None):
         if url is None:
             self.url = self.gen_url_yesterday()
         else:
@@ -29,7 +31,7 @@ class ISWRequester:
         # self.pure_text = self.pure()
 
         self.df = self.to_df()
-        self._vector = self.to_vect()
+        self._vector = None #self.to_vect()
 
     @property
     def data_collection(self):
@@ -137,6 +139,9 @@ class ISWRequester:
     # method for vectorization
     def to_vect(self):
         # TODO add if module is not downoladed -> download
+        if not spacy.util.is_package("en_core_web_sm"):
+            subprocess.check_call([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
+
         nlp = spacy.load("en_core_web_sm")
 
 
@@ -151,12 +156,9 @@ class ISWRequester:
         # lowercasing
         def lowercase_text(text):
             # sample = ast.literal_eval(text)
-
             return [i.lower() for i in text]
 
         # text cleaning from odd elements
-        import re
-
         def clean_text(text_list):
             # Ensure input is a list of strings
             if not all(isinstance(text, str) for text in text_list):
@@ -208,8 +210,10 @@ class ISWRequester:
 
         # vectorizing
         #ENTER THE RIGHT PATH
-        with open("/Users/tsaebst/PycharmProjects/4-pythonic-squad/source/NLP/tfidf.pkl", "rb") as f:
+
+        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/source/NLP/tfidf.pkl", "rb") as f:
             tfidf_vect = pickle.load(f)
+
         tfidf_matrix = tfidf_vect.transform(pure['text_for_vect2'])
         tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=tfidf_vect.get_feature_names_out())
         vect_df = pd.concat([pure["date"], tfidf_df], axis=1)
