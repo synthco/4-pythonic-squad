@@ -28,7 +28,8 @@ class Dfender:
 
         self.__isw_vector = self.request_isw()
 
-        self.__weather_vector = self.request_weather()
+        self.__weather_vector = pd.read_csv("Weather.csv")
+        #self.request_weather()
 
 
         self.city_id_map = {
@@ -171,36 +172,60 @@ class Dfender:
         merged_df = pd.merge(weather, isw, on='key')
         merged_df = merged_df.drop(columns='key')
 
-        grid_values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-        grid_df = pd.DataFrame({'region_id': grid_values})
-        encoder = OneHotEncoder(sparse_output=False, categories=[grid_values])
-        one_hot_encoded = encoder.fit_transform(merged_df[['region_id']])
+        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_upd.pkl", 'rb+') as f:
+            try:
+                model = joblib.load(f)
+                print('Done!')
+            except FileNotFoundError:
+                print("XGBoost model file not found.")
 
-        encoded_df_oh = pd.DataFrame(one_hot_encoded, columns=encoder.get_feature_names_out(['region_id']))
+            common_columns = set(merged_df.columns).intersection(model.feature_names)
 
-        missing_values_df = pd.DataFrame(0, index=np.arange(len(merged_df)),
-                                         columns=[f'region_id_{value}' for value in grid_values])
+            # Get the columns that are present in model.feature_names but not in merged_df
+            missing_columns = set(model.feature_names).difference(merged_df.columns)
 
-        encoded = pd.concat([merged_df, encoded_df_oh], axis=1)
+            # Create a DataFrame with only the missing columns and fill it with zeros
+            missing_df = pd.DataFrame(0, index=merged_df.index, columns=missing_columns)
 
-        encoded = encoded.drop('region_id', axis=1)
+            # Concatenate merged_df with the missing_df to include the missing columns filled with zeros
+            merged_df = pd.concat([merged_df, missing_df], axis=1)
 
-        for value in grid_values:
-            if f'region_id_{value}' not in encoded.columns:
-                encoded[f'region_id_{value}'] = 0
 
-        return encoded
+
+
+
+
+
+        # grid_values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+        # grid_df = pd.DataFrame({'region_id': grid_values})
+        # encoder = OneHotEncoder(sparse_output=False, categories=[grid_values])
+        # one_hot_encoded = encoder.fit_transform(merged_df[['region_id']])
+        #
+        # encoded_df_oh = pd.DataFrame(one_hot_encoded, columns=encoder.get_feature_names_out(['region_id']))
+        #
+        # missing_values_df = pd.DataFrame(0, index=np.arange(len(merged_df)),
+        #                                  columns=[f'region_id_{value}' for value in grid_values])
+        #
+        # encoded = pd.concat([merged_df, encoded_df_oh], axis=1)
+        #
+        # encoded = encoded.drop('region_id', axis=1)
+        #
+        # for value in grid_values:
+        #     if f'region_id_{value}' not in encoded.columns:
+        #         encoded[f'region_id_{value}'] = 0
+
+        return merged_df
 
     def predict(self):
         # xgboost = pickle.load(open('XGBoost_model_v3.pkl', 'wb'))
         with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_upd.pkl", 'rb+') as f:
             try:
-                xgboost = joblib.load(f)
+                model = joblib.load(f)
                 print('Done!')
             except FileNotFoundError:
                 print("XGBoost model file not found.")
 
-        prediction = xgboost.predict(self.vector)
+        prediction = model.predict(self.vector)
         return prediction
 
 
