@@ -33,3 +33,6 @@ Make sure you have done (one of these) points to start it:
 * ISW - getter for ISW
 * Backend/API - DFenfer for new data for prediction getter
 * Backend/main_backend - file for the request
+
+
+*Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav
