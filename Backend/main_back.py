@@ -14,25 +14,59 @@ key = "9AJTDWYQN4BA9QE8BD2U3A7QQ"
 #endpoint
 @app.route("/predict", methods=['POST'])
 def predict():
-
     json_data = request.get_json()
 
     if json_data is None:
         raise InvalidUsage("Request data is missing or not in JSON format", status_code=400)
-    # getting data from json doc and creating new vars using it
-    requester_name = json_data.get("requester_name")
+
     locations = json_data.get("locations")
-    # checking if toker is correct and is present, checking if other required members are present, etc.
     if locations is None:
-        raise InvalidUsage("locations is required fields", status_code=400)
+        raise InvalidUsage("Locations are required fields", status_code=400)
 
     token = json_data.get("token")
-
     if token != API_TOKEN:
-        raise InvalidUsage("wrong API token", status_code=403)
-
+        raise InvalidUsage("Wrong API token", status_code=403)
 
     dfender = Dfender()
+    prediction_array = dfender.result
+
+    city_id_map = {
+        'Vinnytsia': 2,
+        'Lutsk': 3,
+        'Dnipro': 4,
+        'Donetsk': 5,
+        'Zhytomyr': 6,
+        'Uzhhorod': 7,
+        'Zaporizhzhia': 8,
+        'Ivano-Frankivsk': 9,
+        'Kyiv': 10,
+        'Kropyvnytskyi': 11,
+        'Lviv': 13,
+        'Mykolaiv': 14,
+        'Odesa': 15,
+        'Poltava': 16,
+        'Rivne': 17,
+        'Sumy': 18,
+        'Ternopil': 19,
+        'Kharkiv': 20,
+        'Kherson': 21,
+        'Khmelnytskyi Oblast': 22,
+        'Cherkasy': 23,
+        'Chernivtsi': 24,
+        'Chernihiv': 25
+    }
+
+    result = {}
+    for loc in locations:
+        if loc in city_id_map:
+            n = city_id_map[loc]
+            cut = prediction_array[n - 1]
+            location_data = prediction_array[n - 1: n + 11]
+            result[loc] = {"data": location_data}
+
+    return result
+
+
 
     # creating right output format via our data
     # data = output_rows(dfender)

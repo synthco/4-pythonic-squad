@@ -28,8 +28,8 @@ class Dfender:
 
         self.__isw_vector = self.request_isw()
 
-        self.__weather_vector =  self.request_weather()
-            #pd.read_csv("Weather.csv"))
+        # self.__weather_vector = pd.read_csv("Weather.csv")
+        self.__weather_vector = self.request_weather()
 #
         self.city_id_map = {
             'Вінниця': 2,
@@ -233,6 +233,7 @@ class Dfender:
                 print("XGBoost model file not found.")
 
         prediction = model.predict(self.vector)
+        print(type(prediction))
         return prediction
 
 
