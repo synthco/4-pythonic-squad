@@ -108,7 +108,7 @@ class Dfender:
 
         self.__vector = self.full_merge()
 
-        self.__result = 0#= self.predict()
+        self.__result =  0 #self.predict()
 
     @property
     def date(self):
@@ -193,7 +193,7 @@ class Dfender:
 
     def predict(self):
         # xgboost = pickle.load(open('XGBoost_model_v3.pkl', 'wb'))
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_upd.pkl", 'rb+') as f:
+        with open("/Users/tsaebst/Downloads/XGBoost_upd.pkl", 'rb+') as f:
             try:
                 xgboost = joblib.load(f)
                 print('Done!')

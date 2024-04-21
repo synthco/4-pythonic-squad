@@ -1,6 +1,6 @@
 from dfender import Dfender
 import subprocess
-
+import pandas as pd
 def test_dfender():
     dfender = Dfender()
     # df1 = dfender.isw_vector
