@@ -28,8 +28,7 @@ class Dfender:
 
         self.__isw_vector = self.request_isw()
 
-        self.__weather_vector = pd.read_csv("Weather.csv")
-        #self.request_weather()
+        self.__weather_vector = self.request_weather()
 
 
         self.city_id_map = {
