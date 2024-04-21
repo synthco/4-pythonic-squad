@@ -1,3 +1,4 @@
+import joblib
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from source.isw.isw_requester import ISWRequester
@@ -191,8 +192,7 @@ class Dfender:
 
     def predict(self):
         # xgboost = pickle.load(open('XGBoost_model_v3.pkl', 'wb'))
-        with open("XGBoost_model_v3.pkl", 'wb+') as f:
-            xgboost = pickle.load(f)
+        xgboost = joblib.load('XGBoost_upd.pkl')
 
         prediction = xgboost.predict(self.vector)
         return prediction

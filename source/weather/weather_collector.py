@@ -11,7 +11,7 @@ class WeatherCollector:
                             "Chernivtsi", "Ivano-Frankivsk", "Ternopil", "Khmelnytskyi",
                             "Uzhhorod", "Vinnytsia", "Cherkasy", "Poltava", "Chernihiv",
                             "Sumy", "Kharkiv", "Kropyvnytskyi", "Dnipro", "Mykolaiv",
-                            "Kharkiv", "Luhansk", "Donetsk", "Odesa", "Chernihiv",
+                            "Kharkiv", "Zaporizhzhia", "Donetsk", "Odesa", "Chernihiv",
                             "Kherson"]
         self.__weather_data = None
         self.__data = self.fetch_weather_data()
@@ -42,7 +42,7 @@ class WeatherCollector:
 
     @staticmethod
     def read_key():
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/source/weather/api_key.txt", "r") as f:
+        with open("/Users/tsaebst/Downloads/api_key.txt", "r") as f:
             api_key = f.readline()
         return api_key.strip()
 
