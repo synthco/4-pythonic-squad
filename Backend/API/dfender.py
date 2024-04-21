@@ -28,9 +28,9 @@ class Dfender:
 
         self.__isw_vector = self.request_isw()
 
-        self.__weather_vector = self.request_weather()
-
-
+        self.__weather_vector =  self.request_weather()
+            #pd.read_csv("Weather.csv"))
+#
         self.city_id_map = {
             'Вінниця': 2,
             'Луцьк': 3,
@@ -148,12 +148,12 @@ class Dfender:
         weather_requester = WeatherCollector(self.date)
         return weather_requester.weather_data
 
-    def full_merge(self):
+    def full_merge(self, xgb=None):
         weather = self.weather_vector
         isw = self.isw_vector
 
         weather['resolvedAddress'] = weather['resolvedAddress'].str.split(',').str[0]
-        # weather.insert(loc=3, column='region_id', value=weather['resolvedAddress'].map(self.city_id_map).astype(int))
+        weather.insert(loc=3, column='region_id', value=weather['resolvedAddress'].map(self.city_id_map).astype(int))
         weather = weather.drop(self.weather_data_exclude, axis=1)
         weather['preciptype_hourly'] = weather['preciptype_hourly'].replace(self.precip_type_mapping)
         weather['solarradiation_hourly'] = weather['solarradiation_hourly'].fillna(-1)
@@ -180,33 +180,10 @@ class Dfender:
 
         merged_df.drop(columns=columns_to_drop, inplace=True)
 
-        # with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_upd.pkl", 'rb+') as f:
-        #     try:
-        #         model = joblib.load(f)
-        #         print('Done!')
-        #     except FileNotFoundError:
-        #         print("XGBoost model file not found.")
-        #
-        #     common_columns = set(merged_df.columns).intersection(model.feature_names)
-        #
-        #     # Get the columns that are present in model.feature_names but not in merged_df
-        #     missing_columns = set(model.feature_names).difference(merged_df.columns)
-        #
-        #     # Create a DataFrame with only the missing columns and fill it with zeros
-        #     missing_df = pd.DataFrame(0, index=merged_df.index, columns=missing_columns)
-        #
-        #     # Concatenate merged_df with the missing_df to include the missing columns filled with zeros
-        #     merged_df = pd.concat([merged_df, missing_df], axis=1)
-
-
-
-
-
-
-
         grid_values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-        grid_df = pd.DataFrame({'region_id': grid_values})
+        # grid_df = pd.DataFrame({'region_id': grid_values})
         encoder = OneHotEncoder(sparse_output=False, categories=[grid_values])
+
         one_hot_encoded = encoder.fit_transform(merged_df[['region_id']])
 
         encoded_df_oh = pd.DataFrame(one_hot_encoded, columns=encoder.get_feature_names_out(['region_id']))
@@ -233,7 +210,18 @@ class Dfender:
         for col in columns_to_create:
             encoded[col] = 0
 
-        return encoded
+
+        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/ordered_keys.pkl", 'rb+') as f:
+            ordered_keys = pickle.load(f)
+            print('Keys loaded')
+
+
+        pred_data2_ordered = {k: encoded[k] for k in ordered_keys if k in encoded}
+        pred_data2_ordered_df = pd.DataFrame(pred_data2_ordered)
+
+        # dtest = xgb.DMatrix(pred_data2_ordered_df)
+
+        return pred_data2_ordered_df
 
     def predict(self):
         # xgboost = pickle.load(open('XGBoost_model_v3.pkl', 'wb'))
