@@ -35,4 +35,4 @@ Make sure you have done (one of these) points to start it:
 * Backend/main_backend - file for the request
 
 
-*Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav
+* Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav
