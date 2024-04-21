@@ -31,7 +31,7 @@ class ISWRequester:
         # self.pure_text = self.pure()
 
         self.df = self.to_df()
-        self._vector = None #self.to_vect()
+        self._vector = self.to_vect()
 
     @property
     def data_collection(self):
@@ -40,6 +40,8 @@ class ISWRequester:
     @property
     def data_vect(self):
         return self._vector
+
+
 
     @staticmethod
     def gen_url_yesterday() -> str:

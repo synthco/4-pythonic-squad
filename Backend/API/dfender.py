@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
-
 from source.isw.isw_requester import ISWRequester
 from source.weather.weather_collector import  WeatherCollector
 from datetime import datetime
@@ -29,6 +28,7 @@ class Dfender:
         self.__isw_vector = self.request_isw()
 
         self.__weather_vector = self.request_weather()
+
 
         self.city_id_map = {
             'Вінниця': 2,
@@ -106,15 +106,11 @@ class Dfender:
 
         self.__vector = self.full_merge()
 
-        self.__result = None
+        self.__result = self.predict()
 
     @property
     def date(self):
         return self.__date
-
-    @property
-    def isw(self):
-        return self.__isw_vector
 
     @property
     def isw_vector(self):
@@ -123,6 +119,15 @@ class Dfender:
     @property
     def weather_vector(self):
         return self.__weather_vector
+
+    @property
+    def vector(self):
+        return self.__vector
+
+    @property
+    def result(self):
+        return self.__result
+
 
     def __repr__(self):
         res = {
@@ -184,7 +189,13 @@ class Dfender:
 
         return encoded
 
+    def predict(self):
+        # xgboost = pickle.load(open('XGBoost_model_v3.pkl', 'wb'))
+        with open("XGBoost_model_v3.pkl", 'wb+') as f:
+            xgboost = pickle.load(f)
+
+        prediction = xgboost.predict(self.vector)
+        return prediction
 
 
-# https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-april-9-2024
-# https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-april-09-2024
+
