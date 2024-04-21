@@ -13,7 +13,7 @@ Make sure you have done (one of these) points to start it:
 * insert the created token and key to the file backend.py
 * install the requirments.txt file
 
-* To run:
+To run:
 * 1) Go to Postman
 * 2) Choose "Create a new collection"
 * 3) Choose method "Post"
@@ -27,12 +27,12 @@ Make sure you have done (one of these) points to start it:
 
 
 **Content**
-* Evaluating and visual - evaluation and EDA for the model
-* ML - model training
-* NLP - NLP + vectorization for ISW.csv
-* ISW - getter for ISW
-* Backend/API - DFenfer for new data for prediction getter
-* Backend/main_backend - file for the request
+Evaluating and visual - evaluation and EDA for the model
+ML - model training
+NLP - NLP + vectorization for ISW.csv
+ISW - getter for ISW
+Backend/API - DFenfer for new data for prediction getter
+Backend/main_backend - file for the request
 
 
 * Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav
