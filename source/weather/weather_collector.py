@@ -11,7 +11,7 @@ class WeatherCollector:
                             "Chernivtsi", "Ivano-Frankivsk", "Ternopil", "Khmelnytskyi",
                             "Uzhhorod", "Vinnytsia", "Cherkasy", "Poltava", "Chernihiv",
                             "Sumy", "Kharkiv", "Kropyvnytskyi", "Dnipro", "Mykolaiv",
-                            "Kharkiv", "Luhansk", "Donetsk", "Odesa", "Chernihiv",
+                            "Kharkiv", "Zaporizhzhia", "Donetsk", "Odesa", "Chernihiv",
                             "Kherson"]
         self.__weather_data = None
         self.__data = self.fetch_weather_data()
