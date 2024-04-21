@@ -8,6 +8,8 @@ def test_dfender():
     #
     # df1.to_csv("ISW.csv", index=False)
     # df2.to_csv("Weather.csv", index=False)
+    df = dfender.vector
+    df.to_csv('predict_vector.csv')
     print(dfender.result)
 
     # print(dfender)

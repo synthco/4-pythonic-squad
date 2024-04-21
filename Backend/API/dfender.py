@@ -1,4 +1,3 @@
-import joblib
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from source.isw.isw_requester import ISWRequester
@@ -6,6 +5,7 @@ from source.weather.weather_collector import  WeatherCollector
 from datetime import datetime
 import pandas as pd
 import pickle
+import joblib
 
 
 
@@ -105,9 +105,10 @@ class Dfender:
     "['ice']": 5
 }
 
+
         self.__vector = self.full_merge()
 
-        self.__result = self.predict()
+        self.__result = 0#= self.predict()
 
     @property
     def date(self):
@@ -192,7 +193,12 @@ class Dfender:
 
     def predict(self):
         # xgboost = pickle.load(open('XGBoost_model_v3.pkl', 'wb'))
-        xgboost = joblib.load('XGBoost_upd.pkl')
+        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_upd.pkl", 'rb+') as f:
+            try:
+                xgboost = joblib.load(f)
+                print('Done!')
+            except FileNotFoundError:
+                print("XGBoost model file not found.")
 
         prediction = xgboost.predict(self.vector)
         return prediction
