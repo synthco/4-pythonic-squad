@@ -48,7 +48,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"token\":\"123\",\n    \"locations\": [\"Kyiv\", \"Lviv\"]\n}",
+							"raw": "{\n    \"token\":\"YOURTOKEN\",\n    \"locations\": [\"Kyiv\", \"Lviv\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
