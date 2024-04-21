@@ -213,7 +213,7 @@ class ISWRequester:
         # vectorizing
         #ENTER THE RIGHT PATH
 
-        with open("/Users/tsaebst/Downloads/tfidf_vect.pkl", "rb") as f:
+        with open("/Users/tsaebst/PycharmProjects/4-pythonic-squad/tfidf_vect.pkl", "rb") as f:
             tfidf_vect = pickle.load(f)
 
         tfidf_matrix = tfidf_vect.transform(pure['text_for_vect2'])

@@ -42,7 +42,7 @@ class WeatherCollector:
 
     @staticmethod
     def read_key():
-        with open("/Users/tsaebst/Downloads/api_key.txt", "r") as f:
+        with open("api_key.txt", "r") as f:
             api_key = f.readline()
         return api_key.strip()
 
