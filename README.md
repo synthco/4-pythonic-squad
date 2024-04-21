@@ -27,12 +27,12 @@ To run:
 
 
 **Content**
-** Evaluating and visual - evaluation and EDA for the model
-** ML - model training
-NLP - NLP + vectorization for ISW.csv
-ISW - getter for ISW
-Backend/API - DFenfer for new data for prediction getter
-Backend/main_backend - file for the request
+* Evaluating and visual - evaluation and EDA for the model
+* ML - model training
+* NLP - NLP + vectorization for ISW.csv
+* ISW - getter for ISW
+* Backend/API - DFenfer for new data for prediction getter
+* Backend/main_backend - file for the request
 
 
 * Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav
