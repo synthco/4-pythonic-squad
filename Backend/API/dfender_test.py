@@ -1,6 +1,7 @@
 from dfender import Dfender
 import subprocess
 
+
 def test_dfender():
     dfender = Dfender()
     # df1 = dfender.isw_vector
@@ -14,11 +15,10 @@ def test_dfender():
 
     # print(dfender)
 
+
 if __name__ == '__main__':
     # Виконати команду pip для встановлення пакету xgboost
     subprocess.run(["pip", "install", "xgboost"])
 
     print("XGBoost successfully installed!")
     test_dfender()
-
-

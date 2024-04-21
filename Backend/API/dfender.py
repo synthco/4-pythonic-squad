@@ -109,7 +109,7 @@ class Dfender:
 
         self.__vector = self.full_merge()
 
-        self.__result = 0#= self.predict()
+        self.__result = self.predict()
 
     @property
     def date(self):
@@ -154,7 +154,7 @@ class Dfender:
         isw = self.isw_vector
 
         weather['resolvedAddress'] = weather['resolvedAddress'].str.split(',').str[0]
-        weather.insert(loc=3, column='region_id', value=weather['resolvedAddress'].map(self.city_id_map).astype(int))
+        # weather.insert(loc=3, column='region_id', value=weather['resolvedAddress'].map(self.city_id_map).astype(int))
         weather = weather.drop(self.weather_data_exclude, axis=1)
         weather['preciptype_hourly'] = weather['preciptype_hourly'].replace(self.precip_type_mapping)
         weather['solarradiation_hourly'] = weather['solarradiation_hourly'].fillna(-1)
@@ -170,58 +170,78 @@ class Dfender:
         weather['key'] = 1
 
         merged_df = pd.merge(weather, isw, on='key')
-        merged_df = merged_df.drop(columns='key')
+        merged_df.drop(columns=['key', "date_x", "date_y", "preciptype_hourly"], inplace=True)
+        columns_to_drop = ['windgust_hourly', 'dew', 'humidity_hourly', 'temp_hourly',
+                           'snow_hourly', 'temp', 'pressure_hourly', 'dew_hourly', 'solarenergy_hourly',
+                           'visibility_hourly', 'cloudcover_hourly', 'severerisk_hourly', 'solarenergy',
+                           'solarradiation', 'snowdepth_hourly', 'precip', 'precip_hourly',
+                           'precipprob_hourly', 'winddir_hourly', 'humidity', 'tempmax', 'uvindex',
+                           'solarradiation_hourly', 'uvindex_hourly', 'precipcover', 'tempmin',
+                           'windspeed_hourly']
 
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_upd.pkl", 'rb+') as f:
-            try:
-                model = joblib.load(f)
-                print('Done!')
-            except FileNotFoundError:
-                print("XGBoost model file not found.")
+        merged_df.drop(columns=columns_to_drop, inplace=True)
 
-            common_columns = set(merged_df.columns).intersection(model.feature_names)
-
-            # Get the columns that are present in model.feature_names but not in merged_df
-            missing_columns = set(model.feature_names).difference(merged_df.columns)
-
-            # Create a DataFrame with only the missing columns and fill it with zeros
-            missing_df = pd.DataFrame(0, index=merged_df.index, columns=missing_columns)
-
-            # Concatenate merged_df with the missing_df to include the missing columns filled with zeros
-            merged_df = pd.concat([merged_df, missing_df], axis=1)
-
-
-
-
-
-
-
-        # grid_values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-        # grid_df = pd.DataFrame({'region_id': grid_values})
-        # encoder = OneHotEncoder(sparse_output=False, categories=[grid_values])
-        # one_hot_encoded = encoder.fit_transform(merged_df[['region_id']])
+        # with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_upd.pkl", 'rb+') as f:
+        #     try:
+        #         model = joblib.load(f)
+        #         print('Done!')
+        #     except FileNotFoundError:
+        #         print("XGBoost model file not found.")
         #
-        # encoded_df_oh = pd.DataFrame(one_hot_encoded, columns=encoder.get_feature_names_out(['region_id']))
+        #     common_columns = set(merged_df.columns).intersection(model.feature_names)
         #
-        # missing_values_df = pd.DataFrame(0, index=np.arange(len(merged_df)),
-        #                                  columns=[f'region_id_{value}' for value in grid_values])
+        #     # Get the columns that are present in model.feature_names but not in merged_df
+        #     missing_columns = set(model.feature_names).difference(merged_df.columns)
         #
-        # encoded = pd.concat([merged_df, encoded_df_oh], axis=1)
+        #     # Create a DataFrame with only the missing columns and fill it with zeros
+        #     missing_df = pd.DataFrame(0, index=merged_df.index, columns=missing_columns)
         #
-        # encoded = encoded.drop('region_id', axis=1)
-        #
-        # for value in grid_values:
-        #     if f'region_id_{value}' not in encoded.columns:
-        #         encoded[f'region_id_{value}'] = 0
+        #     # Concatenate merged_df with the missing_df to include the missing columns filled with zeros
+        #     merged_df = pd.concat([merged_df, missing_df], axis=1)
 
-        return merged_df
+
+
+
+
+
+
+        grid_values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+        grid_df = pd.DataFrame({'region_id': grid_values})
+        encoder = OneHotEncoder(sparse_output=False, categories=[grid_values])
+        one_hot_encoded = encoder.fit_transform(merged_df[['region_id']])
+
+        encoded_df_oh = pd.DataFrame(one_hot_encoded, columns=encoder.get_feature_names_out(['region_id']))
+
+        missing_values_df = pd.DataFrame(0, index=np.arange(len(merged_df)),
+                                         columns=[f'region_id_{value}' for value in grid_values])
+
+        encoded = pd.concat([merged_df, encoded_df_oh], axis=1)
+
+        for value in grid_values:
+            if f'region_id_{value}' not in encoded.columns:
+                encoded[f'region_id_{value}'] = 0
+        encoded = encoded.drop(['region_id', "region_id_12"], axis=1)
+
+        columns_to_create = ['hour_humidity', 'hour_precipprob', 'hour_severerisk', 'day_temp',
+                             'day_solarenergy', 'day_precipcover', 'hour_windgust', 'day_humidity',
+                             'hour_dew', 'hour_windspeed', 'hour_solarradiation', 'day_dew',
+                             'hour_solarenergy', 'hour_snow', 'day_precip', 'hour_pressure',
+                             'day_tempmin', 'hour_visibility', 'hour_uvindex', 'hour_snowdepth',
+                             'hour_winddir', 'hour_precip', 'day_solarradiation', 'hour_preciptype',
+                             'day_tempmax', 'hour_cloudcover', 'day_uvindex', 'hour_temp']
+
+        # Create columns and fill them with 0
+        for col in columns_to_create:
+            encoded[col] = 0
+
+        return encoded
 
     def predict(self):
         # xgboost = pickle.load(open('XGBoost_model_v3.pkl', 'wb'))
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_upd.pkl", 'rb+') as f:
+        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_model.pkl", 'rb+') as f:
             try:
                 model = joblib.load(f)
-                print('Done!')
+                print('Model loaded')
             except FileNotFoundError:
                 print("XGBoost model file not found.")
 

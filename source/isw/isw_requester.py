@@ -218,13 +218,12 @@ class ISWRequester:
 
         tfidf_matrix = tfidf_vect.transform(pure['text_for_vect2'])
         tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=tfidf_vect.get_feature_names_out())
-        new_column_names = ['isw{}'.format(i + 1) for i in range(len(tfidf_df.columns))]
+        new_column_names = ['isw_{}'.format(i + 1) for i in range(len(tfidf_df.columns))]
         tfidf_df.columns = new_column_names
         vect_df = pd.concat([pure["date"], tfidf_df], axis=1)
 
-
-
         return vect_df
+
 
 if __name__ == "__main__":
     requster = ISWRequester()

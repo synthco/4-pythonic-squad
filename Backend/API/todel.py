@@ -1,6 +1,6 @@
 import joblib
 import pandas as pd
-with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_upd.pkl", 'rb+') as f:
+with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_model.pkl", 'rb+') as f:
     try:
         xgboost = joblib.load(f)
         print('Done!')
@@ -9,6 +9,7 @@ with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/X
 
 booster = xgboost.get_booster()
 feature_names = booster.feature_names
+# print(feature_names)
 
 df = pd.read_csv("predict_vector.csv")
 
