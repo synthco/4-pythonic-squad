@@ -1,0 +1,104 @@
+{
+	"info": {
+		"_postman_id": "3428396a-fa46-429c-b7f7-1dab484abe1c",
+		"name": "KMA_L2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32684752"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"token\": \"f0r_w3ath3r_use_0nly\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://13.41.203.43:8000/content/api/integration/get/weather/now",
+					"protocol": "http",
+					"host": [
+						"13",
+						"41",
+						"203",
+						"43"
+					],
+					"port": "8000",
+					"path": [
+						"content",
+						"api",
+						"integration",
+						"get",
+						"weather",
+						"now"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "New Request",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\":\"123\",\n    \"locations\": [\"Kyiv\", \"Lviv\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:5000/predict",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "5000",
+							"path": [
+								"predict"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Server",
+							"value": "Werkzeug/3.0.2 Python/3.12.0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 21 Apr 2024 18:42:02 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "427"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Kyiv\": {\n        \"from time\": \"21:42:02\",\n        \"is_alarm\": [\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false\n        ]\n    },\n    \"Lviv\": {\n        \"from time\": \"21:42:02\",\n        \"is_alarm\": [\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false,\n            false\n        ]\n    }\n}"
+				}
+			]
+		}
+	]
+}
