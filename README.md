@@ -27,8 +27,8 @@ To run:
 
 
 **Content**
-Evaluating and visual - evaluation and EDA for the model
-ML - model training
+** Evaluating and visual - evaluation and EDA for the model
+** ML - model training
 NLP - NLP + vectorization for ISW.csv
 ISW - getter for ISW
 Backend/API - DFenfer for new data for prediction getter
