@@ -83,7 +83,7 @@ def clear_df(time, location, key, date1, date2):
     #yay! finally
     return df
 
-def main():
+if __name__ == "__main__":
     # initializing current date and next date
     # initializing current time as well
     current_date = datetime.now()
@@ -94,8 +94,8 @@ def main():
     time = current_date.strftime("%H-00-00")
 #creating the list of all counties, adding api-key
 # API - https://www.visualcrossing.com
-#your API-key here:
-    key = ""
+#your APIі тлд  ітлд-key here:
+    key = "RCWWMPLADXCCSTWC9Q6KCL9PG"
     locations = ["Kyiv", "Rivne", "Lutsk", "Lviv", "Zhytomyr",
                  "Chernivtsi", "Ivano-Frankivsk", "Ternopil", "Khmelnytskyi",
                  "Uzhhorod", "Vinnytsia", "Cherkasy", "Poltava", "Chernihiv",
@@ -107,10 +107,12 @@ def main():
     for loc in locations:
         new_data = clear_df(time, loc, key, date1, date2)
         weather = pd.concat([weather, new_data], ignore_index=True)
+    print(weather)
+    # weather.to_csv("weather_test.csv", index=False)
 
-    weather.to_csv("weather_test.csv", index=False)
 
 
-main()
+
+
 # check the csv file here:
 #pd.read_csv("weather_test.csv")
