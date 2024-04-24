@@ -211,7 +211,7 @@ class Dfender:
             encoded[col] = 0
 
 
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/ordered_keys.pkl", 'rb+') as f:
+        with open("/Users/tsaebst/PycharmProjects/4-pythonic-squad/Backend/API/ordered_keys.pkl", 'rb+') as f:
             ordered_keys = pickle.load(f)
             print('Keys loaded')
 
@@ -225,7 +225,7 @@ class Dfender:
 
     def predict(self):
         # xgboost = pickle.load(open('XGBoost_model_v3.pkl', 'wb'))
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_model.pkl", 'rb+') as f:
+        with open("/Users/tsaebst/Downloads/XGBoost_model (1).pkl", 'rb+') as f:
             try:
                 model = joblib.load(f)
                 print('Model loaded')

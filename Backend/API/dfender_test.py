@@ -31,6 +31,8 @@ from Backend.API.dfender import Dfender
 import requests
 import json
 
+import pickle
+
 
 
 app = Flask(__name__)
@@ -52,8 +54,8 @@ def predict():
     token = json_data.get("token")
     if token != API_TOKEN:
         raise InvalidUsage("Wrong API token", status_code=403)
-    dfender = Dfender()
-    prediction_array = dfender.result
+
+
 
     city_id_map = [
         'Vinnytsia',
@@ -85,6 +87,9 @@ def predict():
     current_time = now.strftime("%H:%M:%S")
     result = {}
 
+    with open('prediction_array.pkl', 'rb') as f:
+        prediction_array = pickle.load(f)
+
     for loc in locations:
         if loc in city_id_map:
             cut = city_id_map.index(loc)
@@ -98,11 +103,7 @@ def predict():
     # print(result)
     return result
 
-    # creating right output format via our data
-    # data = output_rows(dfender)
 
-    # return dfender
-    #
 
 class InvalidUsage(Exception):
     status_code = 400

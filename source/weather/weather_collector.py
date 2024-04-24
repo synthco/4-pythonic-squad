@@ -42,7 +42,7 @@ class WeatherCollector:
 
     @staticmethod
     def read_key():
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/source/weather/api_key.txt", "r") as f:
+        with open("/Users/tsaebst/PycharmProjects/4-pythonic-squad/api_key.txt", "r") as f:
             api_key = f.readline()
         return api_key.strip()
 
