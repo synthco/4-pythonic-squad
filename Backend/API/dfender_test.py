@@ -61,17 +61,18 @@ def predict():
     current_time = now.strftime("%H:%M:%S")
     result = {}
 
+    df = pd.read_csv("predictions.csv")
+
     for loc in locations:
         if loc in city_id_map:
-            cut = city_id_map.index(loc)
-            delta = 12 * (cut - 1)
-            alarm_data = prediction_array[delta:(delta + 11)]
-            is_alarm = [True if value != 0 else False for value in alarm_data]
-            result[loc] = {
-                "from time": current_time,
-                "is_alarm": is_alarm
-            }
-    # print(result)
+            alarms = {}
+            for index, row in df.iterrows():
+                time = row['hour_datetime']
+                is_alarm = row[loc] != 0
+                alarms[time] = is_alarm
+            result[loc] = alarms
+
+    print(result)
     return result
 
     # creating right output format via our data
