@@ -6,7 +6,7 @@ from flask import Flask, jsonify, request
 from Backend.API.dfender import Dfender
 import requests
 import json
-
+import pandas as pd
 
 
 app = Flask(__name__)
