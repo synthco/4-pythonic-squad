@@ -155,7 +155,7 @@ class Dfender:
         weather['resolvedAddress'] = weather['resolvedAddress'].str.split(',').str[0]
         weather.insert(loc=3, column='region_id', value=weather['resolvedAddress'].map(self.city_id_map).astype(int))
         weather = weather.drop(self.weather_data_exclude, axis=1)
-        weather['preciptype_hourly'] = weather['preciptype_hourly'].replace(self.precip_type_mapping)
+        #weather['preciptype_hourly'] = weather['preciptype_hourly'].replace(self.precip_type_mapping)
         weather['solarradiation_hourly'] = weather['solarradiation_hourly'].fillna(-1)
         weather['solarenergy_hourly'] = weather['solarenergy_hourly'].fillna(-1)
         weather['uvindex_hourly'] = weather['uvindex_hourly'].fillna(-1)
@@ -170,15 +170,6 @@ class Dfender:
 
         merged_df = pd.merge(weather, isw, on='key')
         merged_df.drop(columns=['key', "date_x", "date_y", "preciptype_hourly"], inplace=True)
-        columns_to_drop = ['windgust_hourly', 'dew', 'humidity_hourly', 'temp_hourly',
-                           'snow_hourly', 'temp', 'pressure_hourly', 'dew_hourly', 'solarenergy_hourly',
-                           'visibility_hourly', 'cloudcover_hourly', 'severerisk_hourly', 'solarenergy',
-                           'solarradiation', 'snowdepth_hourly', 'precip', 'precip_hourly',
-                           'precipprob_hourly', 'winddir_hourly', 'humidity', 'tempmax', 'uvindex',
-                           'solarradiation_hourly', 'uvindex_hourly', 'precipcover', 'tempmin',
-                           'windspeed_hourly']
-
-        merged_df.drop(columns=columns_to_drop, inplace=True)
 
         grid_values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
         # grid_df = pd.DataFrame({'region_id': grid_values})
@@ -198,18 +189,37 @@ class Dfender:
                 encoded[f'region_id_{value}'] = 0
         encoded = encoded.drop(['region_id', "region_id_12"], axis=1)
 
-        columns_to_create = ['hour_humidity', 'hour_precipprob', 'hour_severerisk', 'day_temp',
-                             'day_solarenergy', 'day_precipcover', 'hour_windgust', 'day_humidity',
-                             'hour_dew', 'hour_windspeed', 'hour_solarradiation', 'day_dew',
-                             'hour_solarenergy', 'hour_snow', 'day_precip', 'hour_pressure',
-                             'day_tempmin', 'hour_visibility', 'hour_uvindex', 'hour_snowdepth',
-                             'hour_winddir', 'hour_precip', 'day_solarradiation', 'hour_preciptype',
-                             'day_tempmax', 'hour_cloudcover', 'day_uvindex', 'hour_temp']
+        column_mapping = {
+            'humidity_hourly': 'hour_humidity',
+            'precipprob_hourly': 'hour_precipprob',
+            'severerisk_hourly': 'hour_severerisk',
+            'temp_hourly': 'hour_temp',
+            'solarenergy_hourly': 'hour_solarenergy',
+            'precipcover': 'day_precipcover',
+            'windgust_hourly': 'hour_windgust',
+            'humidity': 'day_humidity',
+            'dew_hourly': 'hour_dew',
+            'windspeed_hourly': 'hour_windspeed',
+            'solarradiation_hourly': 'hour_solarradiation',
+            'dew': 'day_dew',
+            'solarenergy': 'day_solarenergy',
+            'snow_hourly': 'hour_snow',
+            'precip': 'day_precip',
+            'pressure_hourly': 'hour_pressure',
+            'tempmin': 'day_tempmin',
+            'visibility_hourly': 'hour_visibility',
+            'uvindex_hourly': 'hour_uvindex',
+            'snowdepth_hourly': 'hour_snowdepth',
+            'winddir_hourly': 'hour_winddir',
+            'precip_hourly': 'hour_precip',
+            'solarradiation': 'day_solarradiation',
+            'uvindex': 'day_uvindex',
+            'tempmax': 'day_tempmax',
+            'cloudcover_hourly': 'hour_cloudcover',
+            'temp': 'day_temp'
+        }
 
-        # Create columns and fill them with 0
-        for col in columns_to_create:
-            encoded[col] = 0
-
+        encoded = encoded.rename(columns=column_mapping)
 
         with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/ordered_keys.pkl", 'rb+') as f:
             ordered_keys = pickle.load(f)
