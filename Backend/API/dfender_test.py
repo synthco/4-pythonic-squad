@@ -28,8 +28,6 @@ def predict():
     token = json_data.get("token")
     if token != API_TOKEN:
         raise InvalidUsage("Wrong API token", status_code=403)
-    dfender = Dfender()
-    prediction_array = dfender.result
 
     city_id_map = [
         'Vinnytsia',
@@ -68,8 +66,10 @@ def predict():
             alarms = {}
             for index, row in df.iterrows():
                 time = row['hour_datetime']
+                date = row['date']
+                key = date + " " + time
                 is_alarm = row[loc] != 0
-                alarms[time] = is_alarm
+                alarms[key] = is_alarm
             result[loc] = alarms
 
     print(result)
