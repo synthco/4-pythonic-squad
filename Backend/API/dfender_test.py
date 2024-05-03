@@ -3,6 +3,7 @@ import os
 os.system('pip install flask')
 import datetime
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from Backend.API.dfender import Dfender
 import requests
 import json
@@ -10,6 +11,7 @@ import pandas as pd
 
 
 app = Flask(__name__)
+CORS(app)
 #enter your custom token here
 API_TOKEN = "123"
 
