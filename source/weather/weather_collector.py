@@ -42,7 +42,7 @@ class WeatherCollector:
 
     @staticmethod
     def read_key():
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/source/weather/api_key.txt", "r") as f:
+        with open("api_key.txt", "r") as f:
             api_key = f.readline()
         return api_key.strip()
 
@@ -51,7 +51,6 @@ class WeatherCollector:
             next_day = self.__date + timedelta(days=1)
             weather_data = pd.DataFrame()
             for location in self.__locations:
-                #print(f"Processing location: {location}")
                 new_data = self.clear_df(location)
                 if new_data is not None:
                     weather_data = pd.concat([weather_data, new_data], ignore_index=True)
@@ -59,7 +58,6 @@ class WeatherCollector:
                     self.correction()
             return weather_data
         except Exception as e:
-            #print(f"An error occurred: {e}")
             return None
 
     def clear_df(self, location):
@@ -94,7 +92,6 @@ class WeatherCollector:
             else:
                 return None
         except Exception as e:
-            #print(f"An error occurred while processing data for {location}: {e}")
             return None
 
     def find_datetime(self, time):
