@@ -223,7 +223,7 @@ class Dfender:
 
         with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/ordered_keys.pkl", 'rb+') as f:
             ordered_keys = pickle.load(f)
-            print('Keys loaded')
+            #print('Keys loaded')
 
 
         pred_data2_ordered = {k: encoded[k] for k in ordered_keys if k in encoded}
@@ -238,12 +238,12 @@ class Dfender:
         with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_model.pkl", 'rb+') as f:
             try:
                 model = joblib.load(f)
-                print('Model loaded')
+                #print('Model loaded')
             except FileNotFoundError:
                 print("XGBoost model file not found.")
 
         prediction = model.predict(self.vector)
-        print(type(prediction))
+        #print(type(prediction))
         return prediction
 
 
