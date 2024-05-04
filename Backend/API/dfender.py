@@ -243,5 +243,4 @@ class Dfender:
                 print("XGBoost model file not found.")
 
         prediction = model.predict(self.vector)
-        #print(type(prediction))
         return prediction
