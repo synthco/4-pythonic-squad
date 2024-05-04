@@ -47,7 +47,7 @@ class ISWRequester:
     def gen_url_yesterday() -> str:
         base_url = "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment"
         yesterday = dt.date.today() - dt.timedelta(days=1)
-        url = base_url + "-" + yesterday.strftime('%B-%d-%Y').lower()
+        url = base_url + "-" + yesterday.strftime('%B-%#d-%Y').lower()
         print(url)
         return url
 
