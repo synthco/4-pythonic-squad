@@ -195,8 +195,6 @@ class ISWRequester:
 
         pure = self.df
 
-        pure = self.df
-
         # use lowercasing
         pure["main_text"] = pure["main_text"].apply(lowercase_text)
 
