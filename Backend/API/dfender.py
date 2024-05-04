@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
-from source.isw.isw_requester import ISWRequester
-from source.weather.weather_collector import  WeatherCollector
+from isw_requester import ISWRequester
+from weather_collector import WeatherCollector
 from datetime import datetime
 import pandas as pd
 import pickle
@@ -221,7 +221,7 @@ class Dfender:
 
         encoded = encoded.rename(columns=column_mapping)
 
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/ordered_keys.pkl", 'rb+') as f:
+        with open("ordered_keys.pkl", 'rb+') as f:
             ordered_keys = pickle.load(f)
             #print('Keys loaded')
 
@@ -235,7 +235,7 @@ class Dfender:
 
     def predict(self):
         # xgboost = pickle.load(open('XGBoost_model_v3.pkl', 'wb'))
-        with open("/Users/ivantyshchenko/Documents/GitHub/4-pythonic-squad/Backend/API/XGBoost_model.pkl", 'rb+') as f:
+        with open("XGBoost_model.pkl", 'rb+') as f:
             try:
                 model = joblib.load(f)
                 #print('Model loaded')
@@ -245,6 +245,3 @@ class Dfender:
         prediction = model.predict(self.vector)
         #print(type(prediction))
         return prediction
-
-
-
