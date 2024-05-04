@@ -51,7 +51,7 @@ class WeatherCollector:
             next_day = self.__date + timedelta(days=1)
             weather_data = pd.DataFrame()
             for location in self.__locations:
-                print(f"Processing location: {location}")
+                #print(f"Processing location: {location}")
                 new_data = self.clear_df(location)
                 if new_data is not None:
                     weather_data = pd.concat([weather_data, new_data], ignore_index=True)
@@ -59,7 +59,7 @@ class WeatherCollector:
                     self.correction()
             return weather_data
         except Exception as e:
-            print(f"An error occurred: {e}")
+            #print(f"An error occurred: {e}")
             return None
 
     def clear_df(self, location):
@@ -94,7 +94,7 @@ class WeatherCollector:
             else:
                 return None
         except Exception as e:
-            print(f"An error occurred while processing data for {location}: {e}")
+            #print(f"An error occurred while processing data for {location}: {e}")
             return None
 
     def find_datetime(self, time):
@@ -137,6 +137,6 @@ class WeatherCollector:
 
             self.__weather_data = corrected_data
 
-            print("Correction applied successfully.")
+            #print("Correction applied successfully.")
         except Exception as e:
             print(f"An error occurred while applying correction: {e}")
