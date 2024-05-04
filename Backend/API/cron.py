@@ -1,6 +1,6 @@
 import pandas as pd
 
-from Backend.API.dfender import Dfender
+from dfender import Dfender
 import pickle
 import datetime
 
@@ -38,8 +38,6 @@ city_id_map = [
         'last_updated'
     ]
 
-
-
 now = datetime.datetime.now()
 date = now.date()
 hour_time = now.replace(minute=0, second=0)
@@ -62,4 +60,3 @@ for i in range(len(df)):
 print(date, hour_time)
 
 df.to_csv('predictions.csv', index=False)
-
