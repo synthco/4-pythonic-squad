@@ -2,7 +2,9 @@
 
 **How to Use**
 
-We are developing a program which would be able to predict air alarms for 12 next hours for any region(“oblast”-“область”) in Ukraine. It would base it’s predictions on the historical data and forecasts from ISW(Institute for the Study of War), alarms APIs and Visual Crossing.
+We are developing an app which would be able to predict air alarms for 12 next hours for any region(“oblast”-“область”) in Ukraine. It would base it’s predictions on the historical data and forecasts from ISW(Institute for the Study of War), alarms APIs and Visual Crossing. Under the hood of app we have XGBoost model for the predictions.
+
+
 Make sure you have done (one of these) points to start it:
 * create a SaaS system via AWS tools. 
 
@@ -37,7 +39,9 @@ To run application on local server - use:
 * NLP - NLP + vectorization for ISW.csv
 * ISW - getter for ISW
 * Backend/API - DFenfer for new data for prediction getter
-* Backend/main_backend - file for the request
+* Backend/dfender_test.py - file with endpoints
+* Backend/cron.py - file to upd the predictive info
+* Frontend
 
 
-* Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav
+* Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav 
