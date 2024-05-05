@@ -1,7 +1,8 @@
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
-from isw_requester import ISWRequester
-from weather_collector import WeatherCollector
+from source.isw.isw_requester import ISWRequester
+from source.weather.weather_collector import WeatherCollector
+import alarms
 from datetime import datetime
 import pandas as pd
 import pickle
@@ -30,7 +31,7 @@ class Dfender:
 
         # self.__weather_vector = pd.read_csv("Weather.csv")
         self.__weather_vector = self.request_weather()
-#
+
         self.city_id_map = {
             'Вінниця': 2,
             'Луцьк': 3,
@@ -105,10 +106,58 @@ class Dfender:
     "['ice']": 5
 }
 
+        self.alarm_region_map ={
+    #4: "Вінницька область",
+    0: 4,
+    #9: "Дніпропетровська область",
+    2: 9,
+    #28: "Донецька область",
+    3: 28,
+    #10: "Житомирська область",
+    4: 10,
+    #11: "Закарпатська область",
+    5: 11,
+    #12: "Запорізька область",
+    6: 12,
+    #13: "Івано-Франківська область",
+    7: 13,
+    #31: "м. Київ"
+    8: 31,
+    #15: "Кіровоградська область",
+    9: 15,
+    #27: "Львівська область",
+    10: 27,
+    #17: "Миколаївська область",
+    11: 17,
+    #18: "Одеська область",
+    12: 18,
+    #19: "Полтавська область",
+    13: 19,
+    #5: "Рівненська область",
+    14: 5,
+    #20: "Сумська область",
+    15: 20,
+    #21: "Тернопільська область",
+    16: 21,
+    #22: "Харківська область",
+    17: 22,
+    #23: "Херсонська область",
+    18: 23,
+    #3: "Хмельницька область",
+    19: 3,
+    #24: "Черкаська область",
+    20: 24,
+    #26: "Чернівецька область",
+    21: 26,
+    #25: "Чернігівська область",
+    22: 25,
+}
 
         self.__vector = self.full_merge()
 
         self.__result = self.predict()
+
+        self.__train_vector = self.train_merge()
 
     @property
     def date(self):
@@ -244,3 +293,22 @@ class Dfender:
 
         prediction = model.predict(self.vector)
         return prediction
+
+
+    def train(self):
+        pass
+
+    def get_alarm(self):
+        for
+
+
+    def train_merge(self):
+        alarm_vector = self.get_alarm()
+
+
+
+
+
+
+
+

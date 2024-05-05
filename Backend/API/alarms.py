@@ -66,5 +66,3 @@ def alarms_for_now(uid):
         print(f"Uebak na kluchi {uid}")
         return 0
 
-
-

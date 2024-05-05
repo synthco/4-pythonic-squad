@@ -3,8 +3,6 @@ from Backend.API.dfender import Dfender
 import requests
 import json
 
-
-
 app = Flask(__name__)
 #enter your custom token here
 API_TOKEN = "123"
