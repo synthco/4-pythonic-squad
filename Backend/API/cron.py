@@ -1,8 +1,9 @@
 import pandas as pd
-
+from alarms import *
 from dfender import Dfender
 import pickle
 import datetime
+import time
 
 df = pd.read_csv("predictions.csv")
 
@@ -44,9 +45,14 @@ hour_time = now.replace(minute=0, second=0)
 
 
 for i, city in enumerate(df.columns[2:-1]):
+    if i == 8 or i == 15:
+        time.sleep(60)
     start_index = i * 12
     end_index = start_index + 12
+    is_alarm = alarms_for_now(i)
     df[city] = vector[start_index:end_index]
+    if is_alarm:
+        df[city].loc[0] = 1488
 
 df['last_updated'] = now
 
