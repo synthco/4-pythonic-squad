@@ -52,7 +52,7 @@ for i, city in enumerate(df.columns[2:-1]):
     is_alarm = alarms_for_now(i)
     df[city] = vector[start_index:end_index]
     if is_alarm:
-        df[city].loc[0] = 1488
+        df[city].loc[0] = 1
 
 df['last_updated'] = now
 
