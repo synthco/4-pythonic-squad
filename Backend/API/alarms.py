@@ -60,10 +60,10 @@ def alarms_for_now(uid):
             return 0
         return 1
     except KeyError as e:
-        print(f"Uebak na kluchi {uid}")
+        print(f"Error on key {uid}")
         return 0
     except Exception as e:
-        print(f"Uebak na kluchi {uid}")
+        print(f"Error on key {uid}")
         return 0
 
 
