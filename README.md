@@ -25,6 +25,11 @@ To run:
 * locations : ["location1", "location2"..]
 * }
 
+To use Frontend part, another instance is required.
+To run application on local server - use:
+* cd "directory/with/frondent"
+* "yarn dev" command
+* insert link in any browser.
 
 **Content**
 * Evaluating and visual - evaluation and EDA for the model
