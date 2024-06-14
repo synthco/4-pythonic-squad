@@ -28,7 +28,7 @@ To run:
 * }
 
 You also can use Frontend part (instance is required).
-To run application on local server - use:
+If you want to run application on local server - use:
 * cd "directory/with/frondent"
 * "yarn dev" command
 * insert link in any browser.
