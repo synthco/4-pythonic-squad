@@ -27,7 +27,7 @@ To run:
 * locations : ["location1", "location2"..]
 * }
 
-To use Frontend part, another instance is required.
+You also can use Frontend part (instance is required).
 To run application on local server - use:
 * cd "directory/with/frondent"
 * "yarn dev" command
