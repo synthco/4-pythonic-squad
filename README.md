@@ -44,4 +44,4 @@ If you want to run application on local server - use:
 * Frontend
 
 Reports and final deployment presentation: https://drive.google.com/drive/folders/1wVH3V8-xe_UUSB-20XnVCh1CyjxzpmpY?usp=sharing
-* Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav 
+Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav 
