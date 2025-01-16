@@ -1,47 +1,33 @@
 # Alarms Prediction System (Secure Sky)
 
-**How to Use**
+## Overview
 
-We are developing an app which would be able to predict air alarms for 12 next hours for any region(“oblast”-“область”) in Ukraine. It would base it’s predictions on the historical data and forecasts from ISW(Institute for the Study of War), alarms APIs and Visual Crossing. Under the hood of app we have XGBoost model for the predictions.
+The Alarms Prediction System is designed to forecast air alarms for the next 12 hours across various regions ("oblasts") in Ukraine. Utilizing historical data and forecasts from the Institute for the Study of War (ISW), alarm APIs, and Visual Crossing, the system employs an XGBoost model to generate predictions.
 
+## Prerequisites
 
-Make sure you have done (one of these) points to start it:
-* create a SaaS system via AWS tools. 
+To set up and run the application, ensure the following:
 
-*have your own key generated (use the link in weather_app.py)
-*have a Postman installed (10.22.9 is recommended)
-*have backend.py file on your jupyter notebook server (as all other files from Backend, ISW and Weather folders)
-*connect to the file using the following command: uwsgi --http 0.0.0.0:8000 --wsgi-file backend.py --callable app --processes 4 --threads 2 --stats 127.0.0.1:9191 command.
-* insert the created token and key to the file backend.py
-* install the requirments.txt file
+- **API Key**: Obtain a personal API key as specified in the `weather_app.py` file.
 
-To run:
-* 1) Go to Postman
-* 2) Choose "Create a new collection"
-* 3) Choose method "Post"
-* 4) Modify link: http://your-ip4:8000/predict
-* 5) Choose "Body" and "row" types of request
-* 6) create a postman request in format:
-* {
-* token: "token",
-* locations : ["location1", "location2"..]
-* }
+- **Postman**: Install Postman for API testing (version 10.22.9 is recommended).
 
-You also can use Frontend part (instance is required).
-If you want to run application on local server - use:
-* cd "directory/with/frondent"
-* "yarn dev" command
-* insert link in any browser.
+- **Backend Files**: Ensure `backend.py` and all related files from the `Backend`, `ISW`, and `Weather` directories are present on your Jupyter Notebook server.
 
-**Content**
-* Evaluating and visual - evaluation and EDA for the model
-* ML - model training
-* NLP - NLP + vectorization for ISW.csv
-* ISW - getter for ISW
-* Backend/API - DFenfer for new data for prediction getter
-* Backend/dfender_test.py - file with endpoints
-* Backend/cron.py - file to upd the predictive info
-* Frontend
+- **uWSGI**: Install uWSGI to serve the application.
 
-Reports and final deployment presentation: https://drive.google.com/drive/folders/1wVH3V8-xe_UUSB-20XnVCh1CyjxzpmpY?usp=sharing
-#Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav 
+- **Python Environment**: Install the required dependencies using the `requirements.txt` file.
+
+## Setup Instructions
+
+1. **Insert API Key**: Add your API key and token into the `backend.py` file at the designated locations.
+
+2. **Start the Application**: Execute the following command to run the application:
+
+   ```bash
+   uwsgi --http 0.0.0.0:8000 --wsgi-file backend.py --callable app --processes 4 --threads 2 --stats 127.0.0.1:9191
+
+Reports and final deployment presentation: https://drive.google.com/drive/folders/1wVH3V8-xe_UUSB-20XnVCh1CyjxzpmpY?usp=sharing. 
+- Developed by: Tyschenko Ivan, Spitkovska Vladyslava, Zasyadko Matiy, Nych Kateryna, Honcharenko Vladyslav
+This enhanced README provides a clear and structured guide for understanding, setting up, and utilizing the Alarms Prediction System. Let me know if you need further assistance or additional information!
+:: [Spitkopvska Vladyslava]{[index=0](https://github.com/tsaebst)} , [Tyschenko Ivan]{[[index=0](https://github.com/synthco)](https://github.com/synthco)}
